@@ -1,0 +1,15 @@
+autogenstudio
+pyautogen>=0.2.0
+fastapi
+uvicorn
+psycopg2-binary
+redis
+gitpython
+requests
+beautifulsoup4
+ddgs
+tree-sitter
+tree-sitter-python
+pytest
+python-dotenv
+tiktoken
