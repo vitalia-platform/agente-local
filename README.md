@@ -18,10 +18,20 @@ A arquitetura do Agente Local baseia-se em princípios sólidos:
 
 ## Instalação
 
-Para inicializar o Vitalia Kit localmente e vincular este agente ao seu repositório de contexto, basta executar o seguinte comando em seu terminal. Ele fará o download e rodará o script de setup automático de dependências, symlinks e validações:
+Para inicializar o projeto no seu notebook (ou em uma máquina nova), você precisará primeiro baixar o **Kit de Agentes Global**, e depois ativá-lo na pasta deste projeto. Siga os dois passos abaixo no seu terminal:
 
+**Passo 1: Instalação Global do Kit Vitalia**
+Baixe os componentes do kit para a sua máquina (`~/.vitalia-spec`):
 ```bash
-wget -qO- https://raw.githubusercontent.com/vitalia-platform/agente-local/main/.specify/scripts/install.sh | bash
+wget -qO- https://raw.githubusercontent.com/vitalia-platform/agente-local-spec-kit/main/scripts/bootstrap.sh | bash
+```
+
+**Passo 2: Ativação no Projeto Local**
+Clone este repositório (`agente-local`), entre na pasta dele e execute o script para vincular o kit:
+```bash
+git clone git@github.com:vitalia-platform/agente-local.git
+cd agente-local
+bash ~/.vitalia-spec/scripts/install.sh
 ```
 
 > **Aviso:** Antes de executar a instalação, certifique-se de já ter criado um repositório vazio no GitHub que servirá de **repositório de contexto** (ex: `revisao-[tema]-contexto`), pois a URL SSH será solicitada durante o processo.
