@@ -1,4 +1,4 @@
-# <!-- main.py | Atualizado em: 24-06-2026 18:20:00(GMT-04:00) -->
+# main.py | Atualizado em: 26-06-2026 12:08:18(GMT-04:00)
 import os
 import asyncio
 from dotenv import load_dotenv

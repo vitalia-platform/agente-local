@@ -1,4 +1,4 @@
-# <!-- tools.py | Atualizado em: 24-06-2026 17:10:00(GMT-04:00) -->
+# tools.py | Atualizado em: 26-06-2026 12:08:18(GMT-04:00)
 import os
 from dotenv import load_dotenv
 

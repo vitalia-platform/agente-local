@@ -1,3 +1,4 @@
+<!-- README.md | Atualizado em: 26-06-2026 12:08:18(GMT-04:00) -->
 # Vitalia Agente Local
 
 Bem-vindo ao **Agente Local** da plataforma Vitalia. Este repositório contém a infraestrutura e os workflows que habilitam o *Spec-Driven Development* (SDD) guiado por IA, garantindo que todo código e configuração siga regras estritas de arquitetura e qualidade (incluindo segurança clínica).

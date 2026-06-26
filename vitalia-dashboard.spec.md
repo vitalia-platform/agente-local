@@ -1,3 +1,4 @@
+<!-- vitalia-dashboard.spec.md | Atualizado em: 26-06-2026 12:08:18(GMT-04:00) -->
 <!-- vitalia-dashboard.spec.md | Criado em: 25-06-2026 -->
 
 # Especificação de Funcionalidade: Vitalia Dashboard & Telemetry API (Event-Driven Control Plane)

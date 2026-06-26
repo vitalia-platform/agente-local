@@ -1,3 +1,4 @@
+# docker-compose.yml | Atualizado em: 26-06-2026 12:08:18(GMT-04:00)
 # agente-local/docker-compose.yml  em 2026-06-24 12:23
 services:
   # Banco de Dados Principal com pgvector

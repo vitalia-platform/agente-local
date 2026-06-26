@@ -1,4 +1,4 @@
-# <!-- telemetry_api.py | Atualizado em: 24-06-2026 17:35:00(GMT-04:00) -->
+# telemetry_api.py | Atualizado em: 26-06-2026 12:08:18(GMT-04:00)
 import os
 import subprocess
 from fastapi import FastAPI

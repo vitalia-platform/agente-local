@@ -1,4 +1,4 @@
-# <!-- test_main_e2e.py | Atualizado em: 24-06-2026 18:25:00(GMT-04:00) -->
+# test_main_e2e.py | Atualizado em: 26-06-2026 12:08:18(GMT-04:00)
 import sys
 import os
 import pytest
