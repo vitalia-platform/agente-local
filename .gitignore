@@ -20,3 +20,8 @@ __pycache__/
 .pytest_cache/
 .coverage
 htmlcov/
+# Ignorar contexto de sessão da IA (repósitorio aninhado isolado)
+.specify/memory/session/
+.specify/memory/session/*
+.specify/memory/data_storage/
+.specify/memory/data_storage/*

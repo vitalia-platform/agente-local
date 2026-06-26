@@ -1,6 +1,9 @@
 # main.py | Atualizado em: 26-06-2026 12:08:18(GMT-04:00)
 import os
 import asyncio
+import json
+import uuid
+from typing import AsyncGenerator
 from dotenv import load_dotenv
 
 load_dotenv(os.path.join(os.path.dirname(__file__), '../.env'))
@@ -8,7 +11,8 @@ load_dotenv(os.path.join(os.path.dirname(__file__), '../.env'))
 from autogen_agentchat.agents import AssistantAgent
 from autogen_agentchat.teams import RoundRobinGroupChat
 from autogen_agentchat.conditions import MaxMessageTermination
-from autogen_ext.models.openai import OpenAIChatCompletionClient
+from autogen_ext.models.ollama import OllamaChatCompletionClient
+from autogen_core.models._types import CreateResult, FunctionCall
 from autogen_agentchat.ui import Console
 
 from tools import save_code_to_rag, update_sprint_state, web_search, read_working_memory, query_audit_log
@@ -18,17 +22,51 @@ NO1_URL = os.getenv("NO1_LOCAL_OLLAMA_URL", "http://localhost:11434/v1")
 NO2_URL = os.getenv("NO2_SERVER_IP", "http://server-ip:11434/v1")
 
 
-def build_ollama_client(base_url: str, model: str) -> OpenAIChatCompletionClient:
-    """Constrói um cliente Ollama (API OpenAI-compatible) para um nó específico."""
-    return OpenAIChatCompletionClient(
+class VitaliaOllamaClient(OllamaChatCompletionClient):
+    """
+    Wrapper customizado para forçar a detecção de JSONs crus (Manual Tool Calling leak)
+    e transformá-los em objetos FunctionCall nativos para o AutoGen.
+    """
+    def _parse_content_for_tool(self, result: CreateResult) -> CreateResult:
+        if isinstance(result.content, str):
+            content_str = result.content.strip()
+            if content_str.startswith("{") and content_str.endswith("}"):
+                try:
+                    data = json.loads(content_str)
+                    if isinstance(data, dict) and "name" in data and "arguments" in data:
+                        # Se arguments já é dict, converte pra string json (padrão OpenAI)
+                        args_str = json.dumps(data["arguments"]) if isinstance(data["arguments"], dict) else str(data["arguments"])
+                        tool_call = FunctionCall(
+                            id=str(uuid.uuid4())[:8],
+                            name=data["name"],
+                            arguments=args_str
+                        )
+                        result.content = [tool_call]
+                except json.JSONDecodeError:
+                    pass
+        return result
+
+    async def create(self, *args, **kwargs) -> CreateResult:
+        result = await super().create(*args, **kwargs)
+        return self._parse_content_for_tool(result)
+        
+    async def create_stream(self, *args, **kwargs):
+        async for chunk in super().create_stream(*args, **kwargs):
+            if isinstance(chunk, CreateResult):
+                yield self._parse_content_for_tool(chunk)
+            else:
+                yield chunk
+
+def build_ollama_client(base_url: str, model: str) -> VitaliaOllamaClient:
+    """Constrói um cliente Ollama (Nativo Wrapper) para melhor suporte a function calling em LLMs locais."""
+    host = base_url.replace("/v1", "")
+    return VitaliaOllamaClient(
         model=model,
-        base_url=base_url,
-        api_key="ollama",
+        host=host,
         model_info={
             "vision": False,
             "function_calling": True,
             "json_output": False,
-            "structured_output": False,
             "family": "unknown",
         }
     )
@@ -50,7 +88,9 @@ def build_orchestrator():
             "Se o Engenheiro propor código sem ter consultado o contexto (read_working_memory), "
             "REJEITE a resposta e ordene a leitura da memória. "
             "Use `query_audit_log` caso precise lembrar do contexto de turnos muito antigos. "
-            "Responda com TERMINATE quando o objetivo da sprint estiver concluído."
+            "Responda com TERMINATE quando o objetivo da sprint estiver concluído. "
+            "[CRITICAL] NUNCA escreva blocos de código JSON simulando a chamada de ferramentas no seu texto. "
+            "Sempre utilize o mecanismo NATIVO de Function Calling da API para acionar ferramentas."
         )
     )
 
@@ -71,7 +111,9 @@ def build_orchestrator():
             "[MANDATORY] Você DEVE SEMPRE usar a ferramenta `read_working_memory` antes de escrever ou modificar código, "
             "para garantir que você tem o contexto atualizado. O Arquiteto rejeitará seu código se não fizer isso. "
             "Sempre salve o código gerado usando `save_code_to_rag` e atualize o progresso "
-            "com `update_sprint_state`. Responda com TERMINATE quando a tarefa estiver concluída."
+            "com `update_sprint_state`. Responda com TERMINATE quando a tarefa estiver concluída. "
+            "[CRITICAL] NUNCA escreva blocos de código JSON simulando a chamada de ferramentas no seu texto. "
+            "Sempre utilize o mecanismo NATIVO de Function Calling da API para acionar ferramentas."
         )
     )
 
@@ -100,8 +142,40 @@ async def run_vitalia(task: str):
     if os.getenv("VITALIA_PUBSUB_ENABLED", "False").lower() == "true":
         asyncio.create_task(dummy_pubsub_listener())
         
-    result = await Console(team.run_stream(task=task))
+    from logger import logger
+    
+    async def log_and_yield(stream):
+        async for message in stream:
+            source = getattr(message, "source", "unknown")
+            msg_type_name = type(message).__name__
+            
+            # Extrair uso de tokens se disponível
+            usage = getattr(message, "models_usage", None)
+            if usage:
+                logger.log_event("telemetry", source, {
+                    "prompt_tokens": getattr(usage, "prompt_tokens", 0),
+                    "completion_tokens": getattr(usage, "completion_tokens", 0)
+                })
+
+            if msg_type_name == "TextMessage":
+                logger.log_event("conversation", source, {"text": message.content})
+            elif msg_type_name == "ToolCallRequestEvent":
+                # Convert FunctionCall array to dict representation
+                calls = [{"name": c.name, "arguments": c.arguments} for c in message.content] if isinstance(message.content, list) else str(message.content)
+                logger.log_event("tool_call", source, {"request": calls})
+            elif msg_type_name == "ToolCallExecutionEvent":
+                results = [{"name": r.name, "content": r.content} for r in message.content] if isinstance(message.content, list) else str(message.content)
+                logger.log_event("tool_call", source, {"execution_result": results})
+            else:
+                content = getattr(message, "content", "")
+                logger.log_event("system_log", source, {"event_class": msg_type_name, "content": str(content)})
+                
+            yield message
+            
+    result = await Console(log_and_yield(team.run_stream(task=task)))
     return result
 
 if __name__ == "__main__":
     asyncio.run(run_vitalia("Implemente uma função Python para calcular o IMC e salve no RAG."))
+    import sys
+    sys.exit(0)

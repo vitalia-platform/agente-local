@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vitalia Control Plane</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&family=Fira+Code&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <!-- Overlay de Login -->
+    <div id="login-overlay" class="overlay active">
+        <div class="glass-panel login-box">
+            <h2>Vitalia Security Gate</h2>
+            <p>Insira a Senha Mestra</p>
+            <form id="login-form">
+                <input type="password" id="master-password" placeholder="••••••••" required>
+                <button type="submit" class="neon-button">Authenticate</button>
+            </form>
+            <div id="login-error" class="error-msg"></div>
+        </div>
+    </div>
+
+    <!-- Settings Modal -->
+    <div id="settings-overlay" class="overlay hidden">
+        <div class="glass-panel settings-box">
+            <div class="settings-header">
+                <h2>⚙️ Settings & Benchmark</h2>
+                <button id="btn-close-settings" class="icon-button">❌</button>
+            </div>
+            
+            <div class="settings-content">
+                <div class="settings-section">
+                    <h3>Environment Configs (.env)</h3>
+                    <form id="settings-form">
+                        <label>VITALIA_PUBSUB_ENABLED</label>
+                        <input type="text" id="env-pubsub" name="VITALIA_PUBSUB_ENABLED">
+                        
+                        <label>NO1_LOCAL_OLLAMA_URL</label>
+                        <input type="text" id="env-no1" name="NO1_LOCAL_OLLAMA_URL">
+                        
+                        <label>NO2_SERVER_IP</label>
+                        <input type="text" id="env-no2" name="NO2_SERVER_IP">
+                        
+                        <button type="submit" class="neon-button">Save & Apply</button>
+                    </form>
+                    <div id="settings-msg" class="msg-box"></div>
+                </div>
+
+                <div class="settings-section">
+                    <h3>Models & Benchmark</h3>
+                    <p style="font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 10px;">
+                        Para realizar testes precisos de latência e velocidade de inferência (Tokens/sec) em todos os nós, utilize a ferramenta Global Benchmark.
+                    </p>
+                    <button id="btn-open-global-benchmark" type="button" class="neon-button" style="background: var(--neon-yellow); color: #000;">🚀 Run Global Benchmark</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Global Benchmark Modal -->
+    <div id="benchmark-overlay" class="overlay hidden" style="z-index: 1050;">
+        <div class="glass-panel settings-box" style="width: 900px;">
+            <div class="settings-header">
+                <h2>🚀 Global Benchmark Runner</h2>
+                <button id="btn-close-benchmark" class="icon-button">❌</button>
+            </div>
+            
+            <div class="settings-content">
+                <p style="margin-bottom: 15px; font-size: 0.9rem; color: var(--text-secondary);">
+                    Executando sequencialmente testes em todos os modelos encontrados nos Nós 1 e 2.
+                </p>
+                <div style="max-height: 400px; overflow-y: auto; border: 1px solid var(--panel-border); border-radius: 6px; margin-bottom: 15px;">
+                    <table class="benchmark-table" id="benchmark-table">
+                        <thead>
+                            <tr>
+                                <th>Nó</th>
+                                <th>Modelo</th>
+                                <th>Status</th>
+                                <th>Cold-start (ms)</th>
+                                <th>Tokens/sec</th>
+                                <th>Atribuir Perfil</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- Preenchido via JS -->
+                        </tbody>
+                    </table>
+                </div>
+                
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <span id="benchmark-progress" style="font-size: 0.9rem; color: var(--neon-blue);">Aguardando inicialização...</span>
+                    <button id="btn-apply-benchmark" type="button" class="neon-button" style="width: auto; padding: 10px 20px;" disabled>Aplicar Perfis Selecionados</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Interface Principal -->
+    <div id="dashboard-container" class="dashboard-container hidden">
+        
+        <header class="glass-panel top-bar">
+            <div class="logo">
+                <h1>Vitalia <span class="neon-text">Control Plane</span></h1>
+            </div>
+            <div class="system-status">
+                <div class="status-indicator">
+                    <span id="ws-status" class="dot disconnected"></span> WebSocket
+                </div>
+                <button id="btn-open-settings" class="icon-button">⚙️ Settings</button>
+                <button id="btn-logout" class="icon-button">🚪 Logout</button>
+            </div>
+        </header>
+
+        <main class="grid-layout">
+            <!-- Telemetry HUD -->
+            <section class="glass-panel telemetry-hud">
+                <h3>Telemetry HUD</h3>
+                
+                <div class="metric-card">
+                    <h4>Nó 1 (VRAM Local)</h4>
+                    <div id="gpu-stats-container" class="gpu-stats">
+                        <p class="waiting">Aguardando dados...</p>
+                    </div>
+                </div>
+
+                <div class="metric-card">
+                    <h4>Tokens Processados</h4>
+                    <div class="tokens-stats">
+                        <div class="stat-box">
+                            <span class="label">Prompt</span>
+                            <span id="stat-prompt" class="value neon-text-blue">0</span>
+                        </div>
+                        <div class="stat-box">
+                            <span class="label">Completion</span>
+                            <span id="stat-completion" class="value neon-text-green">0</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="metric-card">
+                    <h4>Ações de Infra</h4>
+                    <div class="action-buttons">
+                        <button class="action-btn danger" onclick="restartContainer('vitalia_ollama')">Restart Ollama</button>
+                        <button class="action-btn warning" onclick="restartContainer('vitalia_db')">Restart DB</button>
+                    </div>
+                    <div id="action-msg" class="msg-box"></div>
+                </div>
+            </section>
+
+            <!-- Chat View -->
+            <section class="glass-panel chat-view">
+                <h3>Conversa (Agent Interaction)</h3>
+                <div id="chat-stream" class="stream-container">
+                    <!-- Mensagens entram aqui -->
+                </div>
+            </section>
+
+            <!-- Log Console -->
+            <section class="glass-panel log-console">
+                <h3>Audit Logs & Reasoning</h3>
+                <div id="log-stream" class="stream-container console-font">
+                    <!-- Logs entram aqui -->
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>

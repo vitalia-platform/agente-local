@@ -13,3 +13,11 @@ tree-sitter-python
 pytest
 python-dotenv
 tiktoken
+ollama
+websockets
+psutil
+docker
+PyJWT
+passlib
+bcrypt
+httpx

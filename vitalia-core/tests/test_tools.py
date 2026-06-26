@@ -61,6 +61,7 @@ def hello_world():
 def test_web_search(mock_ddgs):
     """Testa a integração da busca web."""
     mock_instance = MagicMock()
+    mock_instance.__enter__.return_value = mock_instance
     mock_ddgs.return_value = mock_instance
     mock_instance.text.return_value = [
         {"title": "AutoGen Docs", "body": "Example of AutoGen", "href": "https://microsoft.github.io/autogen/"}

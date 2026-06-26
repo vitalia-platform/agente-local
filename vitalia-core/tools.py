@@ -8,7 +8,7 @@ import json
 import redis
 import psycopg2
 import requests
-from duckduckgo_search import DDGS
+from ddgs import DDGS
 
 # Credenciais lidas estritamente do .env (Zero Hardcoding)
 DB_USER = os.getenv("POSTGRES_USER", "vitalia_admin")
@@ -137,15 +137,15 @@ def query_audit_log(limit: int = 5) -> str:
 def web_search(query: str) -> str:
     """Busca informações na web usando DuckDuckGo."""
     try:
-        ddgs = DDGS()
-        results = ddgs.text(query, max_results=3)
-        if not results:
-            return "Nenhum resultado encontrado."
-            
-        formatted_results = []
-        for r in results:
-            formatted_results.append(f"Título: {r.get('title')}\nLink: {r.get('href')}\nResumo: {r.get('body')}\n")
-            
-        return "\n---\n".join(formatted_results)
+        with DDGS() as ddgs:
+            results = ddgs.text(query, max_results=3)
+            if not results:
+                return "Nenhum resultado encontrado."
+                
+            formatted_results = []
+            for r in results:
+                formatted_results.append(f"Título: {r.get('title')}\nLink: {r.get('href')}\nResumo: {r.get('body')}\n")
+                
+            return "\n---\n".join(formatted_results)
     except Exception as e:
         return f"Erro na busca web: {str(e)}"
