@@ -1,8 +1,7 @@
 
 # Vitalia Spec Kit — contexto de sessão da IA (repo Git separado)
 # Ignorar contexto de sessão da IA (repósitorio aninhado isolado)
-.specify/memory/session/
-
+.specify/*
 .DS_Store
 
 # Variáveis de Ambiente e Segredos
@@ -21,10 +20,3 @@ __pycache__/
 .pytest_cache/
 .coverage
 htmlcov/
-
-# Ignorar storage de dados da revisão (repositório aninhado isolado)
-.specify/memory/data_storage/
-.specify/memory/data_storage/*
-
-# Armazenamento Intermediário (Docling)
-.specify/memory/data_storage/saida/markdowns/
