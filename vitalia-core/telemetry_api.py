@@ -1,4 +1,4 @@
-# telemetry_api.py | Atualizado em: 26-06-2026
+# telemetry_api.py | Atualizado em: 27-06-2026 11:42:03(GMT-04:00)
 import os
 import json
 import asyncio
@@ -114,7 +114,8 @@ async def websocket_endpoint(websocket: WebSocket):
     except WebSocketDisconnect:
         pass
     except Exception as e:
-        print(f"WS Error: {e}")
+        from datetime import datetime
+        print(f"[{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}] WS Error: {e}")
     finally:
         await r.aclose()
 

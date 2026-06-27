@@ -1,4 +1,4 @@
-# main.py | Atualizado em: 26-06-2026 12:08:18(GMT-04:00)
+# main.py | Atualizado em: 27-06-2026 11:42:03(GMT-04:00)
 import os
 import asyncio
 import json
@@ -10,12 +10,12 @@ load_dotenv(os.path.join(os.path.dirname(__file__), '../.env'))
 
 from autogen_agentchat.agents import AssistantAgent
 from autogen_agentchat.teams import RoundRobinGroupChat
-from autogen_agentchat.conditions import MaxMessageTermination
+from autogen_agentchat.conditions import MaxMessageTermination, TextMentionTermination
 from autogen_ext.models.ollama import OllamaChatCompletionClient
 from autogen_core.models._types import CreateResult, FunctionCall
 from autogen_agentchat.ui import Console
 
-from tools import save_code_to_rag, update_sprint_state, web_search, read_working_memory, query_audit_log
+from tools import save_code_to_rag, update_sprint_state, web_search, read_working_memory, query_audit_log, load_dynamic_skill
 
 # Configurações lidas do .env (Zero Hardcoding - Art. VI)
 NO1_URL = os.getenv("NO1_LOCAL_OLLAMA_URL", "http://localhost:11434/v1")
@@ -47,8 +47,37 @@ class VitaliaOllamaClient(OllamaChatCompletionClient):
         return result
 
     async def create(self, *args, **kwargs) -> CreateResult:
+        import hashlib, pickle, json
+        import redis.asyncio as redis_async
+        
+        try:
+            cache_key_raw = json.dumps(str(kwargs), sort_keys=True)
+            cache_key = f"vitalia_cache:{hashlib.md5(cache_key_raw.encode()).hexdigest()}"
+        except:
+            cache_key = None
+            
+        r = None
+        if cache_key:
+            try:
+                r = redis_async.Redis.from_url(f"redis://:{os.getenv('REDIS_PASSWORD')}@localhost:{os.getenv('REDIS_PORT', '6379')}/0")
+                cached = await r.get(cache_key)
+                if cached:
+                    await r.aclose()
+                    return pickle.loads(cached)
+            except Exception:
+                r = None
+                
         result = await super().create(*args, **kwargs)
-        return self._parse_content_for_tool(result)
+        result = self._parse_content_for_tool(result)
+        
+        if r and cache_key:
+            try:
+                await r.set(cache_key, pickle.dumps(result), ex=3600)
+                await r.aclose()
+            except Exception:
+                pass
+                
+        return result
         
     async def create_stream(self, *args, **kwargs):
         async for chunk in super().create_stream(*args, **kwargs):
@@ -80,7 +109,7 @@ def build_orchestrator():
     architect = AssistantAgent(
         name="Architect",
         model_client=architect_client,
-        tools=[web_search, query_audit_log],
+        tools=[web_search, query_audit_log, load_dynamic_skill],
         description="Pensa sobre a estrutura, toma decisões de design e orienta o Engenheiro. Usa busca na web para referências.",
         system_message=(
             "Você é o Arquiteto Vitalia. Analise os requisitos, defina a estrutura e oriente "
@@ -103,7 +132,7 @@ def build_orchestrator():
     engineer = AssistantAgent(
         name="Engineer",
         model_client=engineer_client,
-        tools=[save_code_to_rag, update_sprint_state, read_working_memory],
+        tools=[save_code_to_rag, update_sprint_state, read_working_memory, load_dynamic_skill],
         model_context=engineer_context,
         description="Escreve o código baseado no plano do Arquiteto, salva no RAG e atualiza a sprint.",
         system_message=(
@@ -117,8 +146,8 @@ def build_orchestrator():
         )
     )
 
-    # Critério de parada: máximo de 10 turnos para evitar loops infinitos
-    termination = MaxMessageTermination(max_messages=10)
+    # Critério de parada: máximo de 10 turnos ou TERMINATE explícito
+    termination = MaxMessageTermination(max_messages=10) | TextMentionTermination("TERMINATE")
 
     team = RoundRobinGroupChat(
         participants=[architect, engineer],

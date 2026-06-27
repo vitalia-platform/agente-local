@@ -1,4 +1,4 @@
-<!-- Progresso.md | Atualizado em: 26-06-2026 12:08:18(GMT-04:00) -->
+<!-- Progresso.md | Atualizado em: 27-06-2026 11:42:03(GMT-04:00) -->
 Aqui estão os passos exatos para deixar sua infraestrutura **Vitalia** operacional:
 
 ---
@@ -107,3 +107,9 @@ docker exec -it vitalia_open_webui curl http://vitalia_ollama:11434/api/tags
 1.  **Flash Attention (Pascal GTX 1060):** Notei que você incluiu `OLLAMA_FLASH_ATTENTION=0` no `docker-compose.yml`. Decisão perfeita. A arquitetura Pascal (CC 6.1) não possui suporte estável para os kernels de Flash Attention do Ollama/Llama.cpp, e desativar isso evita artefatos na geração de código.
 2.  **Keep Alive:** Você defini `OLLAMA_KEEP_ALIVE=-1`. Isso é excelente para evitar o "cold start" (latência de carregamento) toda vez que o Agente Desenvolvedor for acionado, mantendo o modelo pinado na VRAM da GTX 1060.
 3.  **Ambiente de Dados:** O `open-webui` está configurado corretamente para usar o `pgvector` como backend de RAG (`VECTOR_DB=pgvector`).
+
+---
+
+### 📝 PRÓXIMO SPRINT (BACKLOG)
+
+* **Refatorar `VitaliaOllamaClient` para suporte a Tools:** (Opção B do brainstorming) Implementar mapping robusto para permitir que o Llama 3.2 e o Qwen 2.5 façam _Tool Calls_ no formato oficial da API (evitando JSON puro como texto) para que o AutoGen intercepte e execute ferramentas automaticamente.

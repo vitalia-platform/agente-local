@@ -1,4 +1,4 @@
-# tools.py | Atualizado em: 26-06-2026 12:08:18(GMT-04:00)
+# tools.py | Atualizado em: 27-06-2026 11:42:03(GMT-04:00)
 import os
 from dotenv import load_dotenv
 
@@ -31,6 +31,16 @@ def update_sprint_state(task: str, status: str) -> str:
         return "Sucesso: Estado da sprint sincronizado no Redis."
     except Exception as e:
         return f"Erro ao sincronizar com Redis: {str(e)}"
+
+def load_dynamic_skill(skill_name: str) -> str:
+    """Carrega uma skill dinâmica em Markdown para o contexto do agente."""
+    skills_dir = os.path.join(os.path.dirname(__file__), "../../.specify/skills")
+    skill_path = os.path.join(skills_dir, skill_name, "SKILL.md")
+    try:
+        with open(skill_path, "r", encoding="utf-8") as f:
+            return f.read()
+    except FileNotFoundError:
+        return f"Erro: Skill {skill_name} não encontrada em {skills_dir}."
 
 def chunk_code_ast(content: str) -> list:
     """Usa o módulo nativo ast para separar classes/funções inteiras."""
