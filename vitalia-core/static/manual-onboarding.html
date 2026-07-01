@@ -1,0 +1,1100 @@
+<!-- manual-onboarding.html | Atualizado em: 01-07-2026 15:03:06(GMT-04:00) -->
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Vitalia Agente Local — Manual de Onboarding</title>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Fira+Code:wght@400;500&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+  <style>
+    /* ── Variáveis Globais (Mesmo Design System) ── */
+    :root {
+      --bg: #0b0f19;
+      --bg-deep: #070a12;
+      --panel-bg: rgba(20, 25, 40, 0.7);
+      --panel-border: rgba(255, 255, 255, 0.08);
+      --text: #e2e8f0;
+      --text-muted: #94a3b8;
+      --neon-blue: #0ea5e9;
+      --neon-green: #10b981;
+      --neon-yellow: #f59e0b;
+      --neon-red: #ef4444;
+      --neon-purple: #a855f7;
+      --sidebar-w: 260px;
+    }
+
+    *, *::before, *::after {
+      box-sizing: border-box; margin: 0; padding: 0;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Inter', sans-serif;
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+      display: flex;
+    }
+
+    /* ── Scrollbar ─────────────────────────────────── */
+    ::-webkit-scrollbar {
+      width: 6px; height: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: transparent;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: rgba(255, 255, 255, 0.15);
+      border-radius: 3px;
+    }
+
+    /* ── Sidebar ───────────────────────────────────── */
+    #sidebar {
+      width: var(--sidebar-w);
+      min-height: 100vh;
+      position: fixed;
+      top: 0; left: 0;
+      background: var(--bg-deep);
+      border-right: 1px solid var(--panel-border);
+      display: flex;
+      flex-direction: column;
+      z-index: 100;
+    }
+
+    .sidebar-logo {
+      padding: 24px 20px 20px;
+      border-bottom: 1px solid var(--panel-border);
+    }
+    .sidebar-logo .title {
+      font-size: 1rem;
+      font-weight: 700;
+      color: #fff;
+      line-height: 1.3;
+    }
+    .sidebar-logo .subtitle {
+      font-size: 0.72rem;
+      color: var(--neon-green);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      margin-top: 4px;
+    }
+
+    .sidebar-section-label {
+      font-size: 0.65rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin: 20px 20px 10px;
+      font-weight: 600;
+    }
+
+    .nav-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 8px 20px;
+      color: var(--text-muted);
+      text-decoration: none;
+      font-size: 0.85rem;
+      font-weight: 500;
+      border-left: 3px solid transparent;
+      transition: all 0.2s;
+    }
+    .nav-item:hover {
+      color: var(--text);
+      background: rgba(255, 255, 255, 0.04);
+      border-left-color: var(--neon-green);
+    }
+    .nav-item.active {
+      color: var(--neon-green);
+      background: rgba(16, 185, 129, 0.08);
+      border-left-color: var(--neon-green);
+    }
+    .nav-icon {
+      font-size: 1rem;
+      min-width: 20px;
+      text-align: center;
+    }
+
+    .sidebar-footer {
+      margin-top: auto;
+      padding: 20px;
+      font-size: 0.72rem;
+      color: var(--text-muted);
+    }
+    .sidebar-footer a {
+      color: var(--neon-green);
+      text-decoration: none;
+      display: inline-block;
+      margin-top: 8px;
+    }
+
+    /* ── Main ──────────────────────────────────────── */
+    #main {
+      margin-left: var(--sidebar-w);
+      padding: 60px 8% 120px;
+      max-width: 1100px;
+      flex: 1;
+    }
+
+    .page-header {
+      padding-bottom: 32px;
+      border-bottom: 1px solid var(--panel-border);
+    }
+    .page-header .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 12px;
+      border-radius: 20px;
+      background: rgba(16, 185, 129, 0.12);
+      border: 1px solid rgba(16, 185, 129, 0.3);
+      color: var(--neon-green);
+      font-size: 0.72rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      font-weight: 600;
+      margin-bottom: 16px;
+    }
+    .page-header h1 {
+      font-size: 2.2rem;
+      font-weight: 700;
+      color: #fff;
+      line-height: 1.2;
+      margin-bottom: 12px;
+    }
+    .page-header p {
+      color: var(--text-muted);
+      max-width: 680px;
+      font-size: 1.05rem;
+    }
+
+    .section {
+      margin-top: 64px;
+      margin-bottom: 64px;
+      scroll-margin-top: 32px;
+    }
+    .section-header {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 24px;
+    }
+    .section-number {
+      width: 32px; height: 32px;
+      border-radius: 8px;
+      background: rgba(16, 185, 129, 0.15);
+      border: 1px solid rgba(16, 185, 129, 0.3);
+      color: var(--neon-green);
+      font-size: 0.8rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .section h2 {
+      font-size: 1.35rem;
+      font-weight: 700;
+      color: #fff;
+    }
+    .section p {
+      margin-bottom: 16px;
+    }
+
+    /* ── Typography & Elements ─────────────────────── */
+    .glass {
+      background: var(--panel-bg);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid var(--panel-border);
+      border-radius: 12px;
+      padding: 24px;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+    }
+
+    .comp-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.85rem;
+    }
+    .comp-table th {
+      text-align: left;
+      padding: 10px 16px;
+      font-size: 0.72rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--neon-green);
+      background: rgba(16, 185, 129, 0.08);
+      border-bottom: 1px solid var(--panel-border);
+    }
+    .comp-table td {
+      padding: 12px 16px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+      color: var(--text);
+      vertical-align: top;
+    }
+    .comp-table tr:hover td {
+      background: rgba(255, 255, 255, 0.02);
+    }
+    .comp-table code {
+      font-family: 'Fira Code', monospace;
+      font-size: 0.78rem;
+      background: rgba(0, 0, 0, 0.3);
+      padding: 2px 6px;
+      border-radius: 4px;
+      color: var(--neon-green);
+    }
+    .comp-table td:last-child {
+      color: var(--text-muted);
+    }
+
+    /* ── Inline Code ───────────────────────────────── */
+    p code, li code, td code {
+      font-family: 'Fira Code', monospace;
+      font-size: 0.82em;
+      background: rgba(0, 0, 0, 0.35);
+      padding: 2px 6px;
+      border-radius: 4px;
+      color: var(--neon-green);
+    }
+
+    /* ── Config Reference ──────────────────────────── */
+    .config-group { margin-bottom: 28px; }
+    .config-group-title {
+      font-size: 0.75rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--neon-green);
+      font-weight: 600;
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .config-group-title::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--panel-border);
+    }
+    .config-grid {
+      display: grid;
+      gap: 8px;
+    }
+    .config-row {
+      display: grid;
+      grid-template-columns: 240px 250px 1fr;
+      gap: 12px;
+      align-items: start;
+      padding: 10px 14px;
+      border-radius: 8px;
+      background: rgba(0, 0, 0, 0.2);
+      font-size: 0.83rem;
+      transition: background 0.2s;
+    }
+    .config-row:hover { background: rgba(255, 255, 255, 0.03); }
+    .config-key {
+      font-family: 'Fira Code', monospace;
+      font-size: 0.78rem;
+      color: var(--neon-green);
+    }
+    .config-default {
+      font-family: 'Fira Code', monospace;
+      font-size: 0.73rem;
+      color: var(--text);
+    }
+    .config-default.secret { color: var(--neon-red); }
+    .config-desc { color: var(--text-muted); font-size: 0.82rem; }
+    .config-important .config-key { color: var(--neon-yellow); }
+
+    /* ── Live Config Values ───────────────────────────────── */
+    .live-val {
+      font-family: 'Fira Code', monospace;
+      font-size: 0.78rem;
+      padding: 2px 8px;
+      border-radius: 4px;
+      transition: all 0.3s;
+    }
+    .live-val.loaded {
+      background: rgba(16,185,129,0.12);
+      color: var(--neon-green);
+      border: 1px solid rgba(16,185,129,0.25);
+    }
+    .live-val.empty {
+      background: rgba(239,68,68,0.1);
+      color: var(--neon-red);
+      border: 1px solid rgba(239,68,68,0.2);
+    }
+    .live-val.secret-ok {
+      background: rgba(16,185,129,0.1);
+      color: var(--neon-green);
+      border: 1px solid rgba(16,185,129,0.2);
+    }
+    .live-val.secret-missing {
+      background: rgba(239,68,68,0.1);
+      color: var(--neon-red);
+      border: 1px solid rgba(239,68,68,0.2);
+    }
+    .config-status-bar {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 16px;
+      border-radius: 8px;
+      font-size: 0.8rem;
+      margin-bottom: 16px;
+      border: 1px solid var(--panel-border);
+      background: rgba(0,0,0,0.2);
+    }
+    .config-status-dot {
+      width: 8px; height: 8px;
+      border-radius: 50%;
+      flex-shrink: 0;
+      background: var(--text-muted);
+    }
+    .config-status-dot.live  { background: var(--neon-green); box-shadow: 0 0 6px var(--neon-green); }
+    .config-status-dot.error { background: var(--neon-red);   box-shadow: 0 0 6px var(--neon-red); }
+    .config-status-dot.loading { background: var(--neon-yellow); animation: pulse 1s infinite; }
+    @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.3} }
+
+    /* ── Alert Boxes ───────────────────────────────── */
+    .alert {
+      display: flex;
+      gap: 14px;
+      padding: 16px;
+      border-radius: 10px;
+      font-size: 0.88rem;
+      margin: 16px 0;
+      line-height: 1.5;
+    }
+    .alert-icon { font-size: 1rem; flex-shrink: 0; margin-top: 1px; }
+    .alert-note    { background: rgba(14,165,233,0.08);  border: 1px solid rgba(14,165,233,0.25);  color: #7dd3fc; }
+    .alert-caution { background: rgba(239,68,68,0.08);   border: 1px solid rgba(239,68,68,0.25);   color: #fca5a5; }
+    .alert-warn    { background: rgba(245,158,11,0.08);  border: 1px solid rgba(245,158,11,0.25);  color: #fcd34d; }
+    .alert-tip     { background: rgba(16,185,129,0.08);  border: 1px solid rgba(16,185,129,0.25);  color: #6ee7b7; }
+    .alert code { background: rgba(0,0,0,0.3); padding: 1px 5px; border-radius: 3px; font-family: 'Fira Code', monospace; font-size: 0.78em; }
+
+    /* ── Pipeline Phases ───────────────────────────── */
+    .phase-list { display: flex; flex-direction: column; gap: 20px; }
+    .phase {
+      background: var(--panel-bg);
+      border: 1px solid var(--panel-border);
+      border-radius: 12px;
+      overflow: hidden;
+    }
+    .phase-header {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      padding: 16px 20px;
+      border-bottom: 1px solid var(--panel-border);
+      background: rgba(0, 0, 0, 0.15);
+    }
+    .phase-badge {
+      width: 36px; height: 36px;
+      border-radius: 8px;
+      font-weight: 700;
+      font-size: 0.85rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .phase-a .phase-badge { background: rgba(14,165,233,0.2);  color: var(--neon-blue); }
+    .phase-b .phase-badge { background: rgba(16,185,129,0.2);  color: var(--neon-green); }
+    .phase-c .phase-badge { background: rgba(168,85,247,0.2);  color: var(--neon-purple); }
+    .phase-d .phase-badge { background: rgba(245,158,11,0.2);  color: var(--neon-yellow); }
+    .phase-e .phase-badge { background: rgba(239,68,68,0.15);  color: var(--neon-red); }
+    .phase-f .phase-badge { background: linear-gradient(135deg,rgba(14,165,233,0.2),rgba(168,85,247,0.2)); color: #c4b5fd; }
+    .phase-info { flex: 1; }
+    .phase-title { font-weight: 700; font-size: 0.95rem; }
+    .phase-goal  { font-size: 0.78rem; color: var(--text-muted); margin-top: 2px; }
+    .phase-body  { padding: 20px; }
+
+    /* ── Code Blocks ───────────────────────────────── */
+    .code-wrap {
+      border: 1px solid var(--panel-border);
+      border-radius: 8px;
+      overflow: hidden;
+      margin-bottom: 14px;
+    }
+    .code-label {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 7px 14px;
+      background: rgba(0, 0, 0, 0.5);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    }
+    .code-label-text {
+      font-size: 0.68rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      font-family: 'Fira Code', monospace;
+    }
+    .copy-btn {
+      background: transparent;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      color: var(--text-muted);
+      font-size: 0.68rem;
+      padding: 3px 10px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-family: inherit;
+      transition: all 0.2s;
+    }
+    .copy-btn:hover { background: rgba(255, 255, 255, 0.08); color: var(--text); }
+    .copy-btn.copied { color: var(--neon-green); border-color: var(--neon-green); }
+    .code-wrap pre { margin: 0 !important; border-radius: 0 !important; }
+    .code-wrap pre code { border-radius: 0 !important; font-size: 0.82rem !important; }
+
+    /* ── Expected Output ───────────────────────────── */
+    .expected {
+      background: rgba(16, 185, 129, 0.05);
+      border: 1px solid rgba(16, 185, 129, 0.2);
+      border-radius: 8px;
+      padding: 10px 14px;
+      font-family: 'Fira Code', monospace;
+      font-size: 0.78rem;
+      color: var(--neon-green);
+      white-space: pre-wrap;
+    }
+
+    /* ── Troubleshooting Accordion ─────────────────── */
+    .trouble-list { display: flex; flex-direction: column; gap: 8px; }
+    .trouble-item {
+      border: 1px solid var(--panel-border);
+      border-radius: 8px;
+      overflow: hidden;
+      transition: border-color 0.3s;
+    }
+    .trouble-item:hover { border-color: rgba(239, 68, 68, 0.3); }
+    .trouble-trigger {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 14px 16px;
+      cursor: pointer;
+      font-size: 0.88rem;
+      font-weight: 500;
+      background: rgba(0, 0, 0, 0.15);
+      user-select: none;
+    }
+    .trouble-icon { color: var(--neon-red); font-size: 0.9rem; }
+    .trouble-trigger .chevron { margin-left: auto; color: var(--text-muted); transition: transform 0.3s; font-size: 0.75rem; }
+    .trouble-item.open .chevron { transform: rotate(180deg); }
+    .trouble-body {
+      display: none;
+      padding: 14px 16px;
+      border-top: 1px solid var(--panel-border);
+      background: var(--panel-bg);
+      font-size: 0.85rem;
+    }
+    .trouble-item.open .trouble-body { display: block; }
+    .trouble-row {
+      display: grid;
+      grid-template-columns: 90px 1fr;
+      gap: 12px;
+      margin-bottom: 8px;
+      align-items: start;
+    }
+    .trouble-row-label {
+      font-size: 0.65rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      font-weight: 700;
+      padding-top: 2px;
+    }
+    .label-cause { color: var(--neon-yellow); }
+    .label-solution { color: var(--neon-green); }
+    .trouble-row p { color: var(--text-muted); line-height: 1.5; }
+
+    /* ── Progress indicator ────────────────────────── */
+    #reading-progress {
+      position: fixed;
+      top: 0; left: 0;
+      width: 0%;
+      height: 3px;
+      background: linear-gradient(90deg, var(--neon-green), var(--neon-blue));
+      z-index: 1000;
+      transition: width 0.1s;
+    }
+
+    ul, ol {
+      margin-left: 20px;
+      margin-bottom: 16px;
+    }
+    li {
+      margin-bottom: 8px;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div id="reading-progress"></div>
+
+  <!-- ── Sidebar ─────────────────────────────── -->
+  <nav id="sidebar">
+    <div class="sidebar-logo">
+      <div class="title">Vitalia Agente Local</div>
+      <div class="subtitle">Manual de Onboarding</div>
+    </div>
+
+    <div class="sidebar-section-label">Navegação</div>
+    <a class="nav-item active" href="#intro">
+      <span class="nav-icon">👋</span> Boas-vindas
+    </a>
+    <a class="nav-item" href="#what-is">
+      <span class="nav-icon">🚀</span> O que é o Vitalia?
+    </a>
+    <a class="nav-item" href="#arch">
+      <span class="nav-icon">🏗️</span> Como funciona
+    </a>
+    <a class="nav-item" href="#install">
+      <span class="nav-icon">🛠️</span> Instalação
+    </a>
+    <a class="nav-item" href="#config">
+      <span class="nav-icon">⚙️</span> Configuração (.env)
+    </a>
+    <a class="nav-item" href="#pipeline">
+      <span class="nav-icon">🔬</span> Validação E2E
+    </a>
+    <a class="nav-item" href="#troubleshooting">
+      <span class="nav-icon">🩺</span> Solução de problemas
+    </a>
+
+    <div class="sidebar-section-label">Links</div>
+    <a class="nav-item" href="/index.html">
+      <span class="nav-icon">📡</span> Dashboard
+    </a>
+    <a class="nav-item" href="/manual.html">
+      <span class="nav-icon">📘</span> Manual de Referência
+    </a>
+
+    <div class="sidebar-footer">
+      Atualizado em 30-06-2026<br>
+      <a href="/index.html">← Voltar ao Control Plane</a>
+    </div>
+  </nav>
+
+  <!-- ── Main ───────────────────────────────── -->
+  <main id="main">
+
+    <!-- Page Header -->
+    <div class="page-header" id="intro">
+      <div class="badge">🎓 Onboarding</div>
+      <h1>Manual de<br>Onboarding</h1>
+      <p>Bem-vindo ao Vitalia Agente Local! Assume conhecimento geral de Python e terminal Linux, mas não assume familiaridade com AutoGen ou Redis Streams.</p>
+      <div class="alert alert-tip">
+        <span class="alert-icon">💡</span>
+        <div><strong>Audiência:</strong> Colaborador técnico novo ao projeto. Leia as seções na ordem — cada uma é pré-requisito da próxima.</div>
+      </div>
+    </div>
+
+    <!-- ── 1. O que é o Vitalia? ──────────────── -->
+    <section class="section" id="what-is">
+      <div class="section-header">
+        <div class="section-number">1</div>
+        <h2>O que é o Vitalia?</h2>
+      </div>
+      
+      <p>O Vitalia é um <strong>orquestrador de agentes de IA</strong> que coordena dois modelos de linguagem (LLMs) rodando em máquinas distintas para executar tarefas de desenvolvimento de software de forma colaborativa.</p>
+      <p>Pense assim: você dá uma tarefa ("implemente uma função Python para X"). Dois agentes entram em ação:</p>
+      <ul>
+        <li><strong>O Arquiteto</strong> — pensa, pesquisa na web, toma decisões de design.</li>
+        <li><strong>O Engenheiro</strong> — escreve o código, salva no banco de dados e reporta o que foi feito.</li>
+      </ul>
+      <p>Eles se comunicam em turnos (Round-Robin), mediados pelo framework <strong>AutoGen</strong> da Microsoft.</p>
+      
+      <div class="alert alert-note">
+        <span class="alert-icon">ℹ️</span>
+        <div><strong>O que é AutoGen?</strong> É um framework Python que orquestra conversas entre múltiplos agentes de IA. Cada agente tem um modelo de linguagem associado, um conjunto de ferramentas (funções Python que pode chamar) e um papel definido. O AutoGen gerencia os turnos, o histórico de mensagens e a condição de parada.</div>
+      </div>
+    </section>
+
+    <!-- ── 2. Arquitetura ────────────────────── -->
+    <section class="section" id="arch">
+      <div class="section-header">
+        <div class="section-number">2</div>
+        <h2>Arquitetura em Camadas</h2>
+      </div>
+
+      <h3>2.1 Duas Máquinas, Um Sistema</h3>
+      <div class="code-wrap">
+        <pre><code class="language-plaintext">Nó 1 — Notebook (você)          Nó 2 — Servidor (GTX 1060)
+─────────────────────           ─────────────────────────────
+• Arquiteto (llama3.2:3b)       • Engenheiro (qwen2.5-coder:7b)
+• Redis (vitalia_redis)         • Inferência GPU
+• pgvector (vitalia_db)
+• Dashboard (telemetry_api)
+• Open WebUI</code></pre>
+      </div>
+      
+      <div class="alert alert-tip">
+        <span class="alert-icon">💡</span>
+        <div><strong>Por que duas máquinas?</strong> Modelos de linguagem grandes exigem muita memória de vídeo (VRAM). O servidor tem uma GPU dedicada (GTX 1060 com 6GB de VRAM) que roda o modelo de código mais poderoso. O notebook roda o modelo mais leve em CPU. Juntos, fazem mais do que qualquer máquina sozinha conseguiria.</div>
+      </div>
+
+      <h3 style="margin-top:32px">2.2 O Problema do Tool Calling e o Tool Bridge</h3>
+      <p>Ferramentas são funções Python que o LLM pode "chamar" (ex: pesquisar na web, salvar código no banco). Mas o <code>llama3.2:3b</code> rodando em CPU no Nó 1 <strong>não sabe chamar ferramentas no formato correto</strong> nativamente. Em vez disso, ele emite JSON em texto puro.</p>
+      <p>O <strong>Tool Bridge</strong> intercepta esse JSON e usa o <strong>Redis Streams</strong> para orquestrar a execução:</p>
+      <div class="code-wrap">
+        <pre><code class="language-plaintext">LLM no Nó 1 responde:                  O sistema intercepta:
+────────────────────────                ─────────────────────────────
+{"name": "web_search",       →   VitaliaOllamaClient detecta o JSON
+ "arguments": {"query": "x"}}    └─► posta pedido no Redis Stream
+                                       └─► tool_worker() executa a função
+                                            └─► posta resultado no Redis Stream
+                                                 └─► AutoGen recebe como se fosse
+                                                     uma chamada de ferramenta normal</code></pre>
+      </div>
+
+      <div class="alert alert-note">
+        <span class="alert-icon">ℹ️</span>
+        <div><strong>O que é Redis Streams?</strong> Redis é um banco de dados em memória ultra-rápido. Streams são como filas de mensagens. Cada mensagem tem um ID único. No Vitalia, usamos duas streams por agente: <code>tool_requests</code> e <code>tool_results</code>. A comunicação é assíncrona.</div>
+      </div>
+
+      <h3 style="margin-top:32px">2.3 Containers Docker</h3>
+      <p>O sistema usa 4 containers gerenciados pelo Docker Compose:</p>
+      <div class="glass">
+        <table class="comp-table">
+          <thead>
+            <tr>
+              <th>Container</th>
+              <th>Porta</th>
+              <th>Papel</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>vitalia_redis</code></td>
+              <td><code>6379</code></td>
+              <td>Fila de mensagens + cache de contexto</td>
+            </tr>
+            <tr>
+              <td><code>vitalia_db</code></td>
+              <td><code>5432</code></td>
+              <td>Banco pgvector (memória de código/RAG)</td>
+            </tr>
+            <tr>
+              <td><code>vitalia_ollama</code></td>
+              <td><code>11434</code></td>
+              <td>Motor de inferência local (Nó 1)</td>
+            </tr>
+            <tr>
+              <td><code>vitalia_open_webui</code></td>
+              <td><code>3000</code></td>
+              <td>Interface web para chat direto com os modelos</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="alert alert-note" style="margin-top:16px">
+        <span class="alert-icon">ℹ️</span>
+        <div><strong>O que é pgvector?</strong> É uma extensão do PostgreSQL que armazena e busca vetores numéricos — representações matemáticas do significado de texto. Quando o Engenheiro salva código, o texto é convertido em vetor. Nas próximas sessões, o sistema busca código similar por semântica.</div>
+      </div>
+    </section>
+
+    <!-- ── 3. Pré-requisitos ──────────────────── -->
+    <section class="section" id="install">
+      <div class="section-header">
+        <div class="section-number">3</div>
+        <h2>Pré-requisitos e Instalação</h2>
+      </div>
+
+      <h3>O que você precisa ter instalado</h3>
+      <ul>
+        <li><strong>Docker + Docker Compose</strong> — para rodar os containers</li>
+        <li><strong>Python 3.12+</strong> — para o orquestrador (recomendado usar <code>.venv</code>)</li>
+        <li><strong>Acesso de rede</strong> ao Nó 2 (servidor) na porta <code>11434</code></li>
+      </ul>
+
+      <h3 style="margin-top:24px">Preparar e Subir o Ambiente</h3>
+      <div class="code-wrap">
+        <div class="code-label"><span class="code-label-text">bash — Setup</span><button class="copy-btn" onclick="copyCode(this)">Copiar</button></div>
+        <pre><code class="language-bash"># 1. Entrar no diretório do projeto e ativar o ambiente virtual (.venv)
+cd /home/andre/projetos/assistidos/agente-local
+source .venv/bin/activate
+
+# 2. Verificar o arquivo .env
+ls -la .env
+# (Se não existir, copie do .env.example e preencha)
+
+# 3. Subir a infraestrutura Docker
+docker-compose up -d
+
+# 4. Verificar se subiu tudo
+docker ps --format "table {{.Names}}\t{{.Status}}\t{{.Ports}}"</code></pre>
+      </div>
+    </section>
+
+    <!-- ── 4. Configuração .env ───────────────── -->
+    <section class="section" id="config">
+      <div class="section-header">
+        <div class="section-number">4</div>
+        <h2>Referência de Configuração (.env)</h2>
+      </div>
+
+      <p>O arquivo <code>.env</code> é a <strong>fonte da verdade</strong> de toda a configuração do sistema. Nunca temos nomes de modelos ou IPs hardcoded no código Python.</p>
+      
+      <div class="alert alert-caution">
+        <span class="alert-icon">🔴</span>
+        <div>O <code>.env</code> <strong>nunca deve ser commitado ao Git</strong>. Ele contém senhas e chaves de API cruciais para a segurança.</div>
+      </div>
+
+      <div class="config-status-bar" id="config-status-bar">
+        <span class="config-status-dot loading" id="config-status-dot"></span>
+        <span id="config-status-text">Carregando valores do <code>.env</code>…</span>
+      </div>
+
+      <div class="glass" style="margin-top:16px">
+
+        <div class="config-group">
+          <div class="config-group-title">Infraestrutura de Containers</div>
+          <div class="config-grid">
+            <div class="config-row" data-key="POSTGRES_DB"><span class="config-key">POSTGRES_DB</span><span class="config-default live-val" id="val-POSTGRES_DB">vitalia_db</span><span class="config-desc">Nome do banco pgvector</span></div>
+            <div class="config-row" data-key="POSTGRES_USER"><span class="config-key">POSTGRES_USER</span><span class="config-default live-val" id="val-POSTGRES_USER">vitalia_admin</span><span class="config-desc">Usuário do banco</span></div>
+            <div class="config-row" data-key="POSTGRES_PASSWORD"><span class="config-key">POSTGRES_PASSWORD</span><span class="config-default secret live-val" id="val-POSTGRES_PASSWORD">⚠ segredo</span><span class="config-desc">Senha do banco</span></div>
+            <div class="config-row" data-key="POSTGRES_PORT"><span class="config-key">POSTGRES_PORT</span><span class="config-default live-val" id="val-POSTGRES_PORT">5432</span><span class="config-desc">Porta exposta pelo container</span></div>
+            <div class="config-row" data-key="REDIS_PORT"><span class="config-key">REDIS_PORT</span><span class="config-default live-val" id="val-REDIS_PORT">6379</span><span class="config-desc">Porta do Redis</span></div>
+            <div class="config-row" data-key="REDIS_PASSWORD"><span class="config-key">REDIS_PASSWORD</span><span class="config-default secret live-val" id="val-REDIS_PASSWORD">⚠ segredo</span><span class="config-desc">Senha do Redis</span></div>
+            <div class="config-row" data-key="DASHBOARD_SECRET_KEY"><span class="config-key">DASHBOARD_SECRET_KEY</span><span class="config-default secret live-val" id="val-DASHBOARD_SECRET_KEY">⚠ segredo</span><span class="config-desc">Chave para JWT do Dashboard</span></div>
+          </div>
+        </div>
+
+        <div class="config-group">
+          <div class="config-group-title">Rede Cross-WSL e Perfis (CRÍTICOS)</div>
+          <div class="config-grid">
+            <div class="config-row" data-key="NO1_LOCAL_OLLAMA_URL"><span class="config-key">NO1_LOCAL_OLLAMA_URL</span><span class="config-default live-val" id="val-NO1_LOCAL_OLLAMA_URL">localhost:11434</span><span class="config-desc">URL do Ollama no Nó 1</span></div>
+            <div class="config-row" data-key="NO2_SERVER_IP"><span class="config-key">NO2_SERVER_IP</span><span class="config-default live-val" id="val-NO2_SERVER_IP">192.168.0.218</span><span class="config-desc">URL do Ollama no Nó 2</span></div>
+            <div class="config-row config-important" data-key="NO1_MODEL"><span class="config-key">NO1_MODEL</span><span class="config-default live-val" id="val-NO1_MODEL">llama3.2:3b</span><span class="config-desc">Modelo do Arquiteto (Nó 1)</span></div>
+            <div class="config-row config-important" data-key="NO2_MODEL"><span class="config-key">NO2_MODEL</span><span class="config-default live-val" id="val-NO2_MODEL">qwen2.5-coder:7b</span><span class="config-desc">Modelo do Engenheiro (Nó 2)</span></div>
+            <div class="config-row config-important" data-key="NO1_TOOL_CALLING_NATIVE"><span class="config-key">NO1_TOOL_CALLING_NATIVE</span><span class="config-default live-val" id="val-NO1_TOOL_CALLING_NATIVE">false</span><span class="config-desc">Usa Tool Bridge? (false = sim)</span></div>
+            <div class="config-row config-important" data-key="NO2_TOOL_CALLING_NATIVE"><span class="config-key">NO2_TOOL_CALLING_NATIVE</span><span class="config-default live-val" id="val-NO2_TOOL_CALLING_NATIVE">true</span><span class="config-desc">Usa nativo do modelo</span></div>
+          </div>
+        </div>
+
+      </div>
+      
+      <div class="alert alert-note" style="margin-top:16px">
+        <span class="alert-icon">ℹ️</span>
+        <div><strong>Regra prática para <code>TOOL_CALLING_NATIVE</code>:</strong> Se o modelo rodar em CPU ou for um modelo pequeno (< 7B parâmetros), use <code>false</code>. Se rodar em GPU com modelo ≥ 7B e suporte, use <code>true</code>. O Tool Bridge (<code>false</code>) funciona como rede de segurança.</div>
+      </div>
+    </section>
+
+    <!-- ── 5. Pipeline E2E ────────────────────── -->
+    <section class="section" id="pipeline">
+      <div class="section-header">
+        <div class="section-number">5</div>
+        <h2>Pipeline de Validação E2E</h2>
+      </div>
+      <p>O teste E2E é dividido em 6 fases de sanidade (A-F). Como o processo do zero até a inferência envolve muita coisa (Docker, Rede, Python, Tool Bridge, Modelos), se a inferência falhar é inútil debugar diretamente nela sem garantir a fundação antes. Esta é a rotina para validar se o ambiente subiu 100%.</p>
+
+      <div class="phase-list">
+        <!-- Fase A -->
+        <div class="phase phase-a">
+          <div class="phase-header">
+            <div class="phase-badge">A</div>
+            <div class="phase-info">
+              <div class="phase-title">Infraestrutura</div>
+              <div class="phase-goal">Confirmar que os 4 containers Docker estão operacionais</div>
+            </div>
+          </div>
+          <div class="phase-body">
+            <div class="code-wrap">
+              <div class="code-label"><span class="code-label-text">bash — A.0 Containers</span><button class="copy-btn" onclick="copyCode(this)">Copiar</button></div>
+              <pre><code class="language-bash">docker ps --format "table {{.Names}}\t{{.Status}}\t{{.Ports}}"</code></pre>
+            </div>
+            <div class="code-wrap">
+              <div class="code-label"><span class="code-label-text">bash — A.1 Redis</span><button class="copy-btn" onclick="copyCode(this)">Copiar</button></div>
+              <pre><code class="language-bash">docker exec -it vitalia_redis redis-cli -a vitalia_redis_secure_2026 ping</code></pre>
+            </div>
+            <div class="alert alert-note">
+              <span class="alert-icon">ℹ️</span>
+              <div>O warning <em>"Using a password with '-a'…"</em> é <strong>esperado e inofensivo</strong> no Redis CLI. O que confirma o sucesso é receber o <code>PONG</code>.</div>
+            </div>
+            <div class="code-wrap">
+              <div class="code-label"><span class="code-label-text">bash — A.2 Banco de Dados</span><button class="copy-btn" onclick="copyCode(this)">Copiar</button></div>
+              <pre><code class="language-bash">docker exec -it vitalia_db psql -U vitalia_admin -d vitalia_db -c "SELECT 1;"</code></pre>
+            </div>
+          </div>
+        </div>
+
+        <!-- Fase B -->
+        <div class="phase phase-b">
+          <div class="phase-header">
+            <div class="phase-badge">B</div>
+            <div class="phase-info">
+              <div class="phase-title">Conectividade Cross-WSL</div>
+              <div class="phase-goal">Confirmar que as duas máquinas se enxergam e os modelos estão rodando</div>
+            </div>
+          </div>
+          <div class="phase-body">
+            <div class="code-wrap">
+              <div class="code-label"><span class="code-label-text">bash — B.1 Ollama Nó 1</span><button class="copy-btn" onclick="copyCode(this)">Copiar</button></div>
+              <pre><code class="language-bash">curl -s http://localhost:11434/api/tags | python3 -m json.tool | grep '"name"' | head -5</code></pre>
+            </div>
+            <div class="code-wrap">
+              <div class="code-label"><span class="code-label-text">bash — B.2 Ollama Nó 2</span><button class="copy-btn" onclick="copyCode(this)">Copiar</button></div>
+              <pre><code class="language-bash">curl -s http://192.168.0.218:11434/api/tags | python3 -m json.tool | grep '"name"' | head -5</code></pre>
+            </div>
+          </div>
+        </div>
+
+        <!-- Fase C -->
+        <div class="phase phase-c">
+          <div class="phase-header">
+            <div class="phase-badge">C</div>
+            <div class="phase-info">
+              <div class="phase-title">Perfil de Hardware</div>
+              <div class="phase-goal">Confirmar que as variáveis do .env estão montando as classes certas</div>
+            </div>
+          </div>
+          <div class="phase-body">
+            <div class="code-wrap">
+              <div class="code-label"><span class="code-label-text">bash — C Validar Orquestrador (Python)</span><button class="copy-btn" onclick="copyCode(this)">Copiar</button></div>
+              <pre><code class="language-python">cd vitalia-core && python3 - << 'EOF'
+import os, sys
+from dotenv import load_dotenv
+load_dotenv("../.env")
+sys.path.insert(0, ".")
+from unittest.mock import patch, MagicMock
+with patch("main.build_ollama_client", return_value=MagicMock()):
+    from main import build_orchestrator
+    team, architect, engineer = build_orchestrator()
+    print(f"NO1_MODEL        : {os.getenv('NO1_MODEL')}")
+    print(f"NO2_MODEL        : {os.getenv('NO2_MODEL')}")
+    print(f"Architect tools  : {len(getattr(architect, '_tools', []))}")
+    print("✅ build_orchestrator() OK")
+EOF</code></pre>
+            </div>
+            <div class="alert alert-note">
+              <span class="alert-icon">ℹ️</span>
+              <div>Com <code>NO1_TOOL_CALLING_NATIVE=false</code>, é esperado que <code>Architect tools</code> retorne <strong>0</strong>. O AutoGen não sabe dessas ferramentas, elas são tratadas externamente via Tool Bridge.</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Fase D e E -->
+        <div class="phase phase-d">
+          <div class="phase-header">
+            <div class="phase-badge">D/E</div>
+            <div class="phase-info">
+              <div class="phase-title">Testes de Sanidade de Código</div>
+              <div class="phase-goal">Pytest + Redis Streams isolados</div>
+            </div>
+          </div>
+          <div class="phase-body">
+            <div class="code-wrap">
+              <div class="code-label"><span class="code-label-text">bash — D pytest</span><button class="copy-btn" onclick="copyCode(this)">Copiar</button></div>
+              <pre><code class="language-bash">cd /home/andre/projetos/assistidos/agente-local
+.venv/bin/python -m pytest vitalia-core/tests/ -v --tb=short</code></pre>
+            </div>
+            <div class="expected">9 passed in X.XXs</div>
+            <p style="margin-top:12px;font-size:0.85rem;color:var(--text-muted);"><em>Nota: A <strong>Fase E</strong> (teste isolado do Redis) consta no <a href="/manual.html#pipeline">Manual de Referência</a> caso os testes acima quebrem e seja preciso debug avançado do Tool Bridge.</em></p>
+          </div>
+        </div>
+
+        <!-- Fase F -->
+        <div class="phase phase-f">
+          <div class="phase-header">
+            <div class="phase-badge">F</div>
+            <div class="phase-info">
+              <div class="phase-title">Inferência End-to-End</div>
+              <div class="phase-goal">Ciclo real com os LLMs inferindo tarefas</div>
+            </div>
+          </div>
+          <div class="phase-body">
+            <div class="alert alert-caution">
+              <span class="alert-icon">🔴</span>
+              <div>Consome a VRAM do Nó 2. Execute <strong>somente se todos os testes acima passarem</strong>. Demora de 1 a 5 min.</div>
+            </div>
+            <div class="code-wrap" style="margin-top:12px">
+              <div class="code-label"><span class="code-label-text">python — F Ciclo de Inferência</span><button class="copy-btn" onclick="copyCode(this)">Copiar</button></div>
+              <pre><code class="language-python">cd vitalia-core && ../.venv/bin/python3 - << 'EOF'
+import asyncio, sys
+sys.path.insert(0, ".")
+from main import run_vitalia
+
+asyncio.run(run_vitalia("""
+[BENCH TEST ONBOARDING]
+1. Arquiteto: use web_search para buscar 'Python asyncio best practices' e cite 1 resultado.
+2. Engenheiro: escreva uma função simples Python e responda TERMINATE.
+"""))
+EOF</code></pre>
+            </div>
+            <p style="font-size:0.85rem;color:var(--text-muted);margin-top:12px">Verifique se nos logs do terminal apareceu o <strong><code>ToolCallRequestEvent</code></strong> e se o chat finalizou com <strong><code>TERMINATE</code></strong>.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── 6. Troubleshooting ────────────────── -->
+    <section class="section" id="troubleshooting">
+      <div class="section-header">
+        <div class="section-number">6</div>
+        <h2>Solução de Problemas Comuns</h2>
+      </div>
+      
+      <div class="trouble-list">
+        
+        <div class="trouble-item">
+          <div class="trouble-trigger" onclick="toggleTrouble(this)">
+            <span class="trouble-icon">🔴</span>
+            <span>"Connection refused" ao acessar o Ollama do Nó 2 (servidor)</span>
+            <span class="chevron">▼</span>
+          </div>
+          <div class="trouble-body">
+            <div class="trouble-row"><span class="trouble-row-label label-cause">Causa</span><p>O Ollama no servidor está configurado para escutar apenas localmente (<code>127.0.0.1</code>), não aceitando conexões de outras máquinas da rede.</p></div>
+            <div class="trouble-row"><span class="trouble-row-label label-solution">Solução</span><p>No servidor, defina a variável de ambiente <code>OLLAMA_HOST=0.0.0.0</code> antes de iniciar o processo do Ollama ou adicione essa variável no systemd service/docker-compose dele.</p></div>
+          </div>
+        </div>
+
+        <div class="trouble-item">
+          <div class="trouble-trigger" onclick="toggleTrouble(this)">
+            <span class="trouble-icon">🔴</span>
+            <span>Tool call aparece como texto normal na resposta do LLM</span>
+            <span class="chevron">▼</span>
+          </div>
+          <div class="trouble-body">
+            <div class="trouble-row"><span class="trouble-row-label label-cause">Causa</span><p>O <code>llama3.2:3b</code> (ou o modelo ativo no Nó 1) optou por falar em texto em vez de gerar o JSON exato exigido pelo prompt do sistema.</p></div>
+            <div class="trouble-row"><span class="trouble-row-label label-solution">Solução</span><p>Isso não é um bug sistêmico, e sim comportamental. Para garantir a formatação, re-execute, ou edite o <code>system_message</code> com exemplos claros de JSON. Caso aconteça, o AutoGen tentará intervir ou o Bridge passará em branco interpretando como texto.</p></div>
+          </div>
+        </div>
+
+        <div class="trouble-item">
+          <div class="trouble-trigger" onclick="toggleTrouble(this)">
+            <span class="trouble-icon">🔴</span>
+            <span>Worker timeout após 30s chamando ferramentas</span>
+            <span class="chevron">▼</span>
+          </div>
+          <div class="trouble-body">
+            <div class="trouble-row"><span class="trouble-row-label label-cause">Causa</span><p>O worker de background que processa o Redis Streams não subiu. Se você colocar as duas variáveis <code>TOOL_CALLING_NATIVE</code> como <code>true</code> no <code>.env</code>, o orquestrador assume que não precisa subir o worker.</p></div>
+            <div class="trouble-row"><span class="trouble-row-label label-solution">Solução</span><p>Garantir que pelo menos uma das variáveis <code>TOOL_CALLING_NATIVE</code> esteja <code>false</code> para que o <code>tool_worker</code> do Tool Bridge inicie junto com o <code>run_vitalia()</code>.</p></div>
+          </div>
+        </div>
+
+        <div class="trouble-item">
+          <div class="trouble-trigger" onclick="toggleTrouble(this)">
+            <span class="trouble-icon">🔴</span>
+            <span>Memória cheia (OOM) / lentidão absurda no Nó 2</span>
+            <span class="chevron">▼</span>
+          </div>
+          <div class="trouble-body">
+            <div class="trouble-row"><span class="trouble-row-label label-cause">Causa</span><p>A GPU (GTX 1060 de 6GB) lotou a memória de vídeo (VRAM). O <code>qwen2.5-coder:7b</code> já ocupa cerca de 5.5GB só para pesos e janelas de contexto restritas.</p></div>
+            <div class="trouble-row"><span class="trouble-row-label label-solution">Solução</span><p>Reinicie o Ollama no servidor para liberar a VRAM retida em cache (<code>docker restart vitalia_ollama</code> ou <code>sudo systemctl restart ollama</code>).</p></div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+  </main>
+
+  <script>
+    // Syntax highlight
+    document.addEventListener('DOMContentLoaded', () => {
+      hljs.highlightAll();
+      loadEnvConfig();
+    });
+
+    // ── Live .env config ──────────────────────────────
+    async function loadEnvConfig() {
+      const dot = document.getElementById('config-status-dot');
+      const text = document.getElementById('config-status-text');
+
+      try {
+        const res = await fetch('/api/config/public');
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        const data = await res.json();
+        const { public: pub, secrets } = data;
+
+        // Populate public vars
+        Object.entries(pub).forEach(([key, value]) => {
+          const el = document.getElementById(`val-${key}`);
+          if (!el) return;
+          if (value) {
+            el.textContent = value;
+            el.className = 'config-default live-val loaded';
+          } else {
+            el.textContent = 'não definido';
+            el.className = 'config-default live-val empty';
+          }
+        });
+
+        // Populate secret indicators
+        Object.entries(secrets).forEach(([key, status]) => {
+          const el = document.getElementById(`val-${key}`);
+          if (!el) return;
+          if (status === 'configured') {
+            el.textContent = '● configurado';
+            el.className = 'config-default live-val secret-ok';
+          } else {
+            el.textContent = '○ não configurado';
+            el.className = 'config-default live-val secret-missing';
+          }
+        });
+
+        dot.className = 'config-status-dot live';
+        text.innerHTML = 'Valores carregados ao vivo do <code>.env</code> via <code>/api/config/public</code>';
+      } catch (err) {
+        dot.className = 'config-status-dot error';
+        text.innerHTML = `API offline — exibindo valores padrão de referência. <small style="color:var(--text-muted)">(${err.message})</small>`;
+      }
+    }
+
+    // Trouble toggle
+    function toggleTrouble(trigger) {
+      const item = trigger.parentElement;
+      item.classList.toggle('open');
+    }
+
+    // Copy code
+    function copyCode(btn) {
+      const pre = btn.closest('.code-wrap').querySelector('pre code');
+      navigator.clipboard.writeText(pre.innerText).then(() => {
+        btn.textContent = 'Copiado!';
+        btn.classList.add('copied');
+        setTimeout(() => {
+          btn.textContent = 'Copiar';
+          btn.classList.remove('copied');
+        }, 2000);
+      });
+    }
+
+    // Active nav on scroll
+    const sections = document.querySelectorAll('.section, .page-header');
+    const navItems = document.querySelectorAll('.nav-item[href^="#"]');
+    const progressBar = document.getElementById('reading-progress');
+
+    window.addEventListener('scroll', () => {
+      // Progress bar
+      const scrolled = window.scrollY;
+      const total = document.body.scrollHeight - window.innerHeight;
+      progressBar.style.width = `${(scrolled / total) * 100}%`;
+
+      // Active nav
+      let current = '';
+      sections.forEach(s => {
+        if (window.scrollY >= s.offsetTop - 80) current = s.id;
+      });
+      navItems.forEach(a => {
+        a.classList.toggle('active', a.getAttribute('href') === `#${current}`);
+      });
+    });
+  </script>
+</body>
+</html>

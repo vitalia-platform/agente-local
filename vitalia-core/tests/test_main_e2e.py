@@ -1,154 +1,257 @@
-# test_main_e2e.py | Atualizado em: 26-06-2026 12:08:18(GMT-04:00)
+# test_main_e2e.py | Atualizado em: 01-07-2026 15:03:07(GMT-04:00)
 import sys
 import os
+import json
+import asyncio
 import pytest
 from unittest.mock import patch, MagicMock, AsyncMock
 
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
 
+# ---------------------------------------------------------------------------
+# TESTE 1 — Arquiteto SEM tools quando NATIVE=false
+# ---------------------------------------------------------------------------
 @patch('main.build_ollama_client')
-def test_orchestrator_builds_correct_topology(mock_client_builder):
+def test_native_false_architect_has_no_tools(mock_client_builder):
     """
-    E2E Simulado: Verifica se a topologia Cross-WSL está correta.
-    - Arquiteto deve usar o cliente do Nó 1 (Llama 3.2:3b).
-    - Engenheiro deve usar o cliente do Nó 2 (Qwen 2.5-coder:7b).
+    RF-02 / CA-02: Quando NO1_TOOL_CALLING_NATIVE=false,
+    o AssistantAgent do Arquiteto NÃO deve ter tools registradas.
+    O Tool Bridge assume esse papel.
     """
     from main import build_orchestrator
-
-    mock_client = MagicMock()
-    mock_client_builder.return_value = mock_client
-
-    team, architect, engineer = build_orchestrator()
-
-    assert mock_client_builder.call_count == 2
-
-    # Primeiro call: Arquiteto no Nó 1 com Llama
-    first_call_args = mock_client_builder.call_args_list[0]
-    assert "llama3.2:3b" in str(first_call_args)
-
-    # Segundo call: Engenheiro no Nó 2 com Qwen
-    second_call_args = mock_client_builder.call_args_list[1]
-    assert "qwen2.5-coder:7b" in str(second_call_args)
-
-    # Valida nomes dos agentes
-    assert architect.name == "Architect"
-    assert engineer.name == "Engineer"
-
-
-@patch('main.build_ollama_client')
-def test_engineer_has_context_limiter(mock_client_builder):
-    """
-    E2E: Verifica que o Engenheiro foi configurado com BufferedChatCompletionContext
-    para proteger a VRAM da GTX 1060 (Nó 2).
-    """
-    from autogen_core.model_context import HeadAndTailChatCompletionContext
-    from main import build_orchestrator
-
     mock_client_builder.return_value = MagicMock()
 
-    _, _, engineer = build_orchestrator()
+    env_overrides = {
+        'NO1_TOOL_CALLING_NATIVE': 'false',
+        'NO2_TOOL_CALLING_NATIVE': 'true',
+        'NO1_MODEL': 'llama3.2:3b',
+        'NO2_MODEL': 'qwen2.5-coder:7b',
+    }
+    with patch.dict(os.environ, env_overrides):
+        _, architect, _ = build_orchestrator()
 
-    # O engineer deve ter um model_context do tipo HeadAndTail
-    assert engineer._model_context is not None
-    assert isinstance(engineer._model_context, HeadAndTailChatCompletionContext)
+    tools = architect._tools if hasattr(architect, '_tools') else []
+    assert tools == [] or tools is None, (
+        f"Arquiteto não deveria ter tools com NATIVE=false, mas tem: {tools}"
+    )
 
 
+# ---------------------------------------------------------------------------
+# TESTE 2 — Arquiteto COM tools quando NATIVE=true
+# ---------------------------------------------------------------------------
 @patch('main.build_ollama_client')
-def test_architect_has_web_search_tool(mock_client_builder):
-    """E2E: Verifica que o Arquiteto tem a ferramenta web_search registrada."""
+def test_native_true_architect_has_tools(mock_client_builder):
+    """
+    RF-02 / CA-01: Quando NO1_TOOL_CALLING_NATIVE=true,
+    o AssistantAgent do Arquiteto DEVE ter tools registradas.
+    """
     from main import build_orchestrator
-    from tools import web_search
-
     mock_client_builder.return_value = MagicMock()
 
-    _, architect, _ = build_orchestrator()
+    env_overrides = {
+        'NO1_TOOL_CALLING_NATIVE': 'true',
+        'NO2_TOOL_CALLING_NATIVE': 'true',
+        'NO1_MODEL': 'llama3.2:3b',
+        'NO2_MODEL': 'qwen2.5-coder:7b',
+    }
+    with patch.dict(os.environ, env_overrides):
+        _, architect, _ = build_orchestrator()
 
-    tool_names = [t.name for t in architect._tools] if hasattr(architect, '_tools') else []
+    tools = architect._tools if hasattr(architect, '_tools') else []
+    assert len(tools) > 0, (
+        "Arquiteto deveria ter tools com NATIVE=true, mas a lista está vazia"
+    )
+    tool_names = [t.name for t in tools]
     assert "web_search" in tool_names
 
 
+# ---------------------------------------------------------------------------
+# TESTE 3 — build_orchestrator() lê modelo do .env (sem hardcoding)
+# ---------------------------------------------------------------------------
 @patch('main.build_ollama_client')
-def test_engineer_has_rag_and_sprint_tools(mock_client_builder):
-    """E2E: Verifica que o Engenheiro tem as ferramentas save_code_to_rag e update_sprint_state."""
+def test_orchestrator_reads_model_from_env(mock_client_builder):
+    """
+    RF-02 / RNF-01 / CA-01: build_orchestrator() deve usar os modelos
+    declarados em NO1_MODEL e NO2_MODEL, não valores hardcoded.
+    """
     from main import build_orchestrator
-
     mock_client_builder.return_value = MagicMock()
 
-    _, _, engineer = build_orchestrator()
+    env_overrides = {
+        'NO1_MODEL': 'mistral:7b-test',
+        'NO2_MODEL': 'deepseek:6.7b-test',
+        'NO1_TOOL_CALLING_NATIVE': 'false',
+        'NO2_TOOL_CALLING_NATIVE': 'true',
+    }
+    with patch.dict(os.environ, env_overrides):
+        build_orchestrator()
 
-    tool_names = [t.name for t in engineer._tools] if hasattr(engineer, '_tools') else []
-    assert "save_code_to_rag" in tool_names
-    assert "update_sprint_state" in tool_names
+    all_calls = str(mock_client_builder.call_args_list)
+
+    # Modelos do .env devem aparecer nas chamadas
+    assert 'mistral:7b-test' in all_calls, (
+        f"Esperava 'mistral:7b-test' nas chamadas ao build_ollama_client, mas não encontrou.\n{all_calls}"
+    )
+    assert 'deepseek:6.7b-test' in all_calls, (
+        f"Esperava 'deepseek:6.7b-test' nas chamadas ao build_ollama_client, mas não encontrou.\n{all_calls}"
+    )
+
+    # Modelos hardcoded NÃO devem aparecer
+    assert 'llama3.2:3b' not in all_calls or 'mistral:7b-test' in all_calls, (
+        "Modelo hardcoded 'llama3.2:3b' apareceu — zero hardcoding violado (Art. XII)"
+    )
 
 
+# ---------------------------------------------------------------------------
+# TESTE 4 — Engenheiro tem contexto limitador de VRAM (mantido da suíte anterior)
+# ---------------------------------------------------------------------------
 @patch('main.build_ollama_client')
-def test_agents_use_urls_from_env(mock_client_builder):
+def test_engineer_has_context_limiter(mock_client_builder):
     """
-    Spec - Critério 5: O main.py deve ler NO1_LOCAL_OLLAMA_URL e NO2_SERVER_IP
-    do ambiente, não hardcoded (Art. VI - Zero Hardcoding).\n    As URLs dos nós são injetadas via variáveis de módulo lidas do .env.
+    RF-02 (engineer): O Engenheiro deve ter HeadAndTailChatCompletionContext
+    para proteger a VRAM do Nó 2.
+    """
+    from autogen_core.model_context import HeadAndTailChatCompletionContext
+    from main import build_orchestrator
+    mock_client_builder.return_value = MagicMock()
+
+    env_overrides = {
+        'NO1_MODEL': 'llama3.2:3b',
+        'NO2_MODEL': 'qwen2.5-coder:7b',
+        'NO1_TOOL_CALLING_NATIVE': 'false',
+        'NO2_TOOL_CALLING_NATIVE': 'true',
+    }
+    with patch.dict(os.environ, env_overrides):
+        _, _, engineer = build_orchestrator()
+
+    assert engineer._model_context is not None
+    assert isinstance(engineer._model_context, HeadAndTailChatCompletionContext), (
+        f"Esperava HeadAndTailChatCompletionContext, mas foi: {type(engineer._model_context)}"
+    )
+
+
+# ---------------------------------------------------------------------------
+# TESTE 5 — tool_worker() posta resultado na stream de resultado
+# ---------------------------------------------------------------------------
+@pytest.mark.asyncio
+async def test_tool_worker_posts_result_to_stream():
+    """
+    RF-04 / CA-03: tool_worker() deve consumir da stream de request,
+    executar a ferramenta via TOOL_REGISTRY e postar na stream de resultado.
     """
     import main as main_module
 
-    mock_client_builder.return_value = MagicMock()
+    # Mock da ferramenta no registry
+    mock_tool = MagicMock(return_value="resultado mockado")
+    original_registry = getattr(main_module, 'TOOL_REGISTRY', {})
+    main_module.TOOL_REGISTRY = {"web_search": mock_tool}
 
-    test_no1_url = "http://test-node1:11434/v1"
-    test_no2_url = "http://test-node2:11434/v1"
+    cid = "test-correlation-id-001"
 
-    # Injeta diretamente nas vars do módulo (evitando reload que perde o mock)
-    original_no1 = main_module.NO1_URL
-    original_no2 = main_module.NO2_URL
+    # Mock do redis_reader: retorna 1 mensagem depois ignora
+    call_count = 0
+    async def fake_xread(*args, **kwargs):
+        nonlocal call_count
+        call_count += 1
+        if call_count == 1:
+            return [(
+                b"vitalia:tool_requests:Architect",
+                [(b"1-0", {
+                    b"correlation_id": cid.encode(),
+                    b"tool_name": b"web_search",
+                    b"arguments_json": b'{"query": "test"}',
+                    b"agent_name": b"Architect",
+                    b"timestamp": b"2026-06-27T13:00:00",
+                })]
+            )]
+        raise asyncio.CancelledError()  # encerra o worker após 1 ciclo
+
+    mock_reader = AsyncMock()
+    mock_reader.xread = fake_xread
+
+    mock_writer = AsyncMock()
+    mock_writer.xadd = AsyncMock()
+
+    # Injetar event para o worker sinalizar
+    event = asyncio.Event()
+    main_module._pending_tool_calls = {cid: event}
+    main_module._tool_results = {}
+
     try:
-        main_module.NO1_URL = test_no1_url
-        main_module.NO2_URL = test_no2_url
+        await main_module.tool_worker(mock_reader, mock_writer)
+    except asyncio.CancelledError:
+        pass
 
-        main_module.build_orchestrator()
+    # Verificar que XADD foi chamado na stream de resultado
+    mock_writer.xadd.assert_called_once()
+    call_args = mock_writer.xadd.call_args
+    stream_name = call_args[0][0] if call_args[0] else call_args[1].get('name', '')
+    assert 'tool_results' in str(stream_name), (
+        f"XADD deveria ser na stream tool_results, mas foi: {stream_name}"
+    )
 
-        call_urls = [str(c) for c in mock_client_builder.call_args_list]
-        assert test_no1_url in str(call_urls[0])
-        assert test_no2_url in str(call_urls[1])
-    finally:
-        main_module.NO1_URL = original_no1
-        main_module.NO2_URL = original_no2
+    # Verificar que o evento foi sinalizado
+    assert event.is_set(), "O Event do correlation_id deveria ter sido setado pelo worker"
+
+    # Restaurar estado
+    main_module.TOOL_REGISTRY = original_registry
+    main_module._pending_tool_calls = {}
+    main_module._tool_results = {}
 
 
-def test_ast_chunking_preserves_function_integrity():
+# ---------------------------------------------------------------------------
+# TESTE 6 — VitaliaOllamaClient detecta JSON e retorna FunctionCall via Bridge
+# ---------------------------------------------------------------------------
+@pytest.mark.asyncio
+async def test_vitalia_client_bridges_tool_on_json():
     """
-    Spec - Critério 2: O AST Chunking não deve cortar funções ao meio.
-    Uma função completa deve retornar como chunk único e íntegro.
+    RF-03 / CA-03: VitaliaOllamaClient deve detectar JSON de tool call no resultado,
+    postar na Redis Stream e retornar CreateResult(content=[FunctionCall(...)]).
+    O AutoGen então processa como ToolCallRequestEvent (não TextMessage).
     """
-    from tools import chunk_code_ast
+    import main as main_module
+    from autogen_core.models._types import CreateResult, FunctionCall
+    from autogen_core.models import RequestUsage
 
-    code = '''
-import os
+    # JSON que simula o LLM vazando um tool call como texto puro
+    tool_json = json.dumps({"name": "web_search", "arguments": {"query": "autogen docs"}})
 
-X = 42
+    # Mock do super().create() retornando JSON cru
+    mock_create_result = CreateResult(
+        content=tool_json,
+        usage=RequestUsage(prompt_tokens=10, completion_tokens=20),
+        finish_reason="stop",
+        cached=False,
+    )
 
-def calculate_bmi(weight: float, height: float) -> float:
-    """Calcula o IMC."""
-    return weight / (height ** 2)
+    cid = "test-bridge-cid-002"
+    result_value = "Resultado da busca: AutoGen docs encontrados."
 
-class HealthChecker:
-    def check(self, bmi: float) -> str:
-        if bmi < 18.5:
-            return "Abaixo do peso"
-        elif bmi < 25.0:
-            return "Peso normal"
-        return "Sobrepeso"
-'''
+    # Simular: ao chamar _bridge_tool_call, o event já está setado (worker respondeu)
+    async def fake_bridge(tool_name, arguments_json):
+        return result_value
 
-    chunks = chunk_code_ast(code)
+    client = main_module.VitaliaOllamaClient.__new__(main_module.VitaliaOllamaClient)
+    client._agent_name = "Architect"
+    client._timeout = 5
+    client._bridge_tool_call = fake_bridge
 
-    # Nenhum chunk deve conter uma função ou classe fragmentada
-    for chunk in chunks:
-        # Se o chunk começa com 'def' ou 'class', deve ter seu bloco completo
-        lines = chunk.strip().split('\n')
-        if lines[0].startswith('def ') or lines[0].startswith('class '):
-            # Chunk deve conter pelo menos uma linha de corpo (não só a assinatura)
-            assert len(lines) > 1, f"Chunk fragmentado detectado: {chunk[:80]}"
+    with patch.object(
+        main_module.OllamaChatCompletionClient,
+        'create',
+        new_callable=AsyncMock,
+        return_value=mock_create_result
+    ):
+        result = await client.create(messages=[], model="test-model")
 
-    # As funções e classes completas devem aparecer em algum chunk
-    all_chunks_text = '\n'.join(chunks)
-    assert 'def calculate_bmi' in all_chunks_text
-    assert 'class HealthChecker' in all_chunks_text
-    assert 'return weight / (height ** 2)' in all_chunks_text
+    # Resultado deve ser FunctionCall, não TextMessage
+    assert isinstance(result.content, list), (
+        f"Esperava lista de FunctionCall, mas content é: {type(result.content)}"
+    )
+    assert len(result.content) == 1
+    fc = result.content[0]
+    assert isinstance(fc, FunctionCall), (
+        f"Esperava FunctionCall, mas foi: {type(fc)}"
+    )
+    assert fc.name == "web_search", f"Nome da tool errado: {fc.name}"

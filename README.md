@@ -1,4 +1,4 @@
-<!-- README.md | Atualizado em: 26-06-2026 12:08:18(GMT-04:00) -->
+<!-- README.md | Atualizado em: 01-07-2026 15:03:06(GMT-04:00) -->
 # Vitalia Agente Local
 
 Bem-vindo ao **Agente Local** da plataforma Vitalia. Este repositório contém a infraestrutura e os workflows que habilitam o *Spec-Driven Development* (SDD) guiado por IA, garantindo que todo código e configuração siga regras estritas de arquitetura e qualidade (incluindo segurança clínica).
@@ -35,3 +35,20 @@ bash ~/.vitalia-spec/scripts/install.sh
 ```
 
 > **Aviso:** Antes de executar a instalação, certifique-se de já ter criado um repositório vazio no GitHub que servirá de **repositório de contexto** (ex: `revisao-[tema]-contexto`), pois a URL SSH será solicitada durante o processo.
+
+---
+
+## 🔬 Teste de Bancada
+
+Após qualquer refatoração do orquestrador, valide o sistema completo com o pipeline de teste de bancada. O documento cobre:
+
+- **Fase A** — Infraestrutura Docker (Redis, PostgreSQL, Ollama)
+- **Fase B** — Conectividade Cross-WSL entre Nó 1 (notebook) e Nó 2 (servidor GTX 1060)
+- **Fase C** — Validação do perfil de hardware (`NO1_TOOL_CALLING_NATIVE`, `NO2_TOOL_CALLING_NATIVE`)
+- **Fase D** — Suíte de testes unitários (`pytest` — 9 testes, zero warnings)
+- **Fase E** — Tool Bridge isolado via Redis Streams (sem Ollama)
+- **Fase F** — Ciclo de inferência end-to-end com prompt padrão
+
+📄 **[Ver pipeline completo → BENCH_TEST.md](./BENCH_TEST.md)**
+
+> **Critério de sucesso:** O Engenheiro responde com `TERMINATE` após o Arquiteto executar uma tool via Bridge. Os logs do Redis mostram entries em `vitalia:tool_requests:Architect` e `vitalia:tool_results:Architect`.

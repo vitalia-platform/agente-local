@@ -1,3 +1,4 @@
+// app.js | Atualizado em: 01-07-2026 15:03:06(GMT-04:00)
 let authToken = null;
 let ws = null;
 
@@ -116,8 +117,7 @@ function routeEvent(event) {
             </div>
             <div class="msg-content"><pre>${contentStr}</pre></div>
         `;
-        stream.appendChild(div);
-        stream.scrollTop = stream.scrollHeight;
+        stream.insertBefore(div, stream.firstChild);
     }
     else {
         // system_log, reasoning ou outros
@@ -130,8 +130,7 @@ function routeEvent(event) {
         if(data.content) contentStr = data.content;
 
         div.innerHTML = `[${timeStr}] <b>${source}</b> (${type}): <pre class="log-pre">${contentStr}</pre>`;
-        stream.appendChild(div);
-        stream.scrollTop = stream.scrollHeight;
+        stream.insertBefore(div, stream.firstChild);
     }
 }
 
@@ -191,7 +190,6 @@ document.getElementById('btn-open-settings').addEventListener('click', () => {
     settingsOverlay.classList.remove('hidden');
     settingsOverlay.classList.add('active');
     loadSettings();
-    fetchLLMs();
 });
 
 document.getElementById('btn-close-settings').addEventListener('click', () => {
@@ -242,36 +240,8 @@ document.getElementById('settings-form').addEventListener('submit', async (e) =>
     }
 });
 
-async function fetchLLMs() {
-    try {
-        const res = await fetch('/api/llms', { headers: { 'Authorization': `Bearer ${authToken}` } });
-        if (res.ok) {
-            const data = await res.json();
-            const select = document.getElementById('benchmark-model');
-            select.innerHTML = '';
-            
-            ['node1', 'node2'].forEach(node => {
-                if (data[node] && data[node].length > 0) {
-                    const optgroup = document.createElement('optgroup');
-                    optgroup.label = node === 'node1' ? 'Nó 1 (Local)' : 'Nó 2 (Server)';
-                    data[node].forEach(m => {
-                        const opt = document.createElement('option');
-                        opt.value = m.name;
-                        opt.textContent = m.name;
-                        opt.dataset.node = node;
-                        optgroup.appendChild(opt);
-                    });
-                    select.appendChild(optgroup);
-                }
-            });
-            if (select.innerHTML === '') {
-                select.innerHTML = '<option value="">Nenhum modelo encontrado</option>';
-            }
-        }
-    } catch (e) {
-        console.error(e);
-    }
-}
+// fetchLLMs() removida: o select#benchmark-model foi substituído pelo
+// Global Benchmark Modal (runGlobalBenchmark), que faz o fetch direto.
 
 // Global Benchmark Logic
 const benchmarkOverlay = document.getElementById('benchmark-overlay');

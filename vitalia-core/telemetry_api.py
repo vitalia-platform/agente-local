@@ -1,10 +1,10 @@
-# telemetry_api.py | Atualizado em: 27-06-2026 11:42:03(GMT-04:00)
+# telemetry_api.py | Atualizado em: 01-07-2026 15:03:07(GMT-04:00)
 import os
 import json
 import asyncio
 import docker
 import jwt
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from typing import Optional, Dict
 
 from fastapi import FastAPI, WebSocket, WebSocketDisconnect, Depends, HTTPException, status
@@ -62,9 +62,9 @@ class Token(BaseModel):
 def create_access_token(data: dict, expires_delta: Optional[timedelta] = None):
     to_encode = data.copy()
     if expires_delta:
-        expire = datetime.utcnow() + expires_delta
+        expire = datetime.now(timezone.utc) + expires_delta
     else:
-        expire = datetime.utcnow() + timedelta(minutes=15)
+        expire = datetime.now(timezone.utc) + timedelta(minutes=15)
     to_encode.update({"exp": expire})
     return jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
 
@@ -170,6 +170,42 @@ class SettingsUpdate(BaseModel):
 async def get_settings(username: str = Depends(get_current_user)):
     keys = ["VITALIA_PUBSUB_ENABLED", "NO1_LOCAL_OLLAMA_URL", "NO2_SERVER_IP", "ROUTER_LLM_PROFILE"]
     return {k: os.getenv(k, "") for k in keys}
+
+
+# Endpoint público para o Manual Web — sem autenticação, sem expor segredos
+@app.get("/api/config/public")
+async def get_config_public():
+    """
+    Retorna variáveis não-sensíveis do .env para exibição no manual web.
+    Variáveis sensíveis retornam apenas indicador de presença — nunca o valor real.
+    """
+    public = {
+        "POSTGRES_DB":             os.getenv("POSTGRES_DB", ""),
+        "POSTGRES_USER":           os.getenv("POSTGRES_USER", ""),
+        "POSTGRES_PORT":           os.getenv("POSTGRES_PORT", ""),
+        "REDIS_PORT":              os.getenv("REDIS_PORT", ""),
+        "NO2_OLLAMA_PORT":         os.getenv("NO2_OLLAMA_PORT", ""),
+        "NO1_LOCAL_OLLAMA_URL":    os.getenv("NO1_LOCAL_OLLAMA_URL", ""),
+        "NO2_SERVER_IP":           os.getenv("NO2_SERVER_IP", ""),
+        "VITALIA_PUBSUB_ENABLED":  os.getenv("VITALIA_PUBSUB_ENABLED", ""),
+        "NODE_TYPE":               os.getenv("NODE_TYPE", ""),
+        "NO1_MODEL":               os.getenv("NO1_MODEL", ""),
+        "NO2_MODEL":               os.getenv("NO2_MODEL", ""),
+        "NO1_TOOL_CALLING_NATIVE": os.getenv("NO1_TOOL_CALLING_NATIVE", ""),
+        "NO2_TOOL_CALLING_NATIVE": os.getenv("NO2_TOOL_CALLING_NATIVE", ""),
+        "TOOL_BRIDGE_TIMEOUT_SEC": os.getenv("TOOL_BRIDGE_TIMEOUT_SEC", ""),
+        "ROUTER_LLM_PROFILE":      os.getenv("ROUTER_LLM_PROFILE", ""),
+        "DEVELOPER_LLM_PROFILE":   os.getenv("DEVELOPER_LLM_PROFILE", ""),
+        "INFRA_LLM_PROFILE":       os.getenv("INFRA_LLM_PROFILE", ""),
+        "REVIEW_LLM_PROFILE":      os.getenv("REVIEW_LLM_PROFILE", ""),
+    }
+    sensitive_keys = [
+        "POSTGRES_PASSWORD", "REDIS_PASSWORD",
+        "DASHBOARD_SECRET_KEY",
+        "GEMINI_API_KEY", "ANTHROPIC_API_KEY", "OPENAI_API_KEY",
+    ]
+    secrets = {k: ("configured" if os.getenv(k, "") else "empty") for k in sensitive_keys}
+    return {"public": public, "secrets": secrets}
 
 @app.post("/api/settings")
 async def update_settings(req: SettingsUpdate, username: str = Depends(get_current_user)):

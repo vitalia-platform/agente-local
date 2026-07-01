@@ -1,0 +1,1939 @@
+<!-- manual.html | Atualizado em: 01-07-2026 15:03:07(GMT-04:00) -->
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Vitalia — Manual de Referência Técnica</title>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Fira+Code:wght@400;500&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+  <style>
+    :root {
+      --bg: #0b0f19;
+      --bg-deep: #070a12;
+      --panel-bg: rgba(20, 25, 40, 0.7);
+      --panel-border: rgba(255, 255, 255, 0.08);
+      --text: #e2e8f0;
+      --text-muted: #94a3b8;
+      --neon-blue: #0ea5e9;
+      --neon-green: #10b981;
+      --neon-yellow: #f59e0b;
+      --neon-red: #ef4444;
+      --neon-purple: #a855f7;
+      --sidebar-w: 260px;
+    }
+
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Inter', sans-serif;
+      font-size: 15px;
+      line-height: 1.7;
+      display: flex;
+      min-height: 100vh;
+    }
+
+    /* ── Scrollbar ─────────────────────────────────── */
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: transparent;
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: rgba(255, 255, 255, 0.15);
+      border-radius: 3px;
+    }
+
+    /* ── Sidebar ───────────────────────────────────── */
+    #sidebar {
+      width: var(--sidebar-w);
+      min-height: 100vh;
+      position: fixed;
+      top: 0;
+      left: 0;
+      background: var(--bg-deep);
+      border-right: 1px solid var(--panel-border);
+      display: flex;
+      flex-direction: column;
+      padding: 0;
+      z-index: 100;
+      overflow-y: auto;
+    }
+
+    .sidebar-logo {
+      padding: 24px 20px 20px;
+      border-bottom: 1px solid var(--panel-border);
+    }
+
+    .sidebar-logo .title {
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--text);
+      line-height: 1.3;
+    }
+
+    .sidebar-logo .subtitle {
+      font-size: 0.72rem;
+      color: var(--neon-blue);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      margin-top: 4px;
+    }
+
+    .sidebar-section-label {
+      font-size: 0.65rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      padding: 18px 20px 6px;
+      font-weight: 600;
+    }
+
+    .nav-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 9px 20px;
+      color: var(--text-muted);
+      text-decoration: none;
+      font-size: 0.85rem;
+      border-left: 3px solid transparent;
+      transition: all 0.2s;
+    }
+
+    .nav-item:hover {
+      color: var(--text);
+      background: rgba(255, 255, 255, 0.04);
+      border-left-color: var(--neon-blue);
+    }
+
+    .nav-item.active {
+      color: var(--neon-blue);
+      background: rgba(14, 165, 233, 0.08);
+      border-left-color: var(--neon-blue);
+    }
+
+    .nav-icon {
+      font-size: 1rem;
+      min-width: 20px;
+      text-align: center;
+    }
+
+    .sidebar-footer {
+      margin-top: auto;
+      padding: 16px 20px;
+      border-top: 1px solid var(--panel-border);
+      font-size: 0.72rem;
+      color: var(--text-muted);
+    }
+
+    .sidebar-footer a {
+      color: var(--neon-blue);
+      text-decoration: none;
+    }
+
+    /* ── Main Content ──────────────────────────────── */
+    #main {
+      margin-left: var(--sidebar-w);
+      flex: 1;
+      padding: 48px 56px;
+      max-width: calc(100vw - var(--sidebar-w));
+    }
+
+    /* ── Page Header ───────────────────────────────── */
+    .page-header {
+      margin-bottom: 48px;
+      padding-bottom: 32px;
+      border-bottom: 1px solid var(--panel-border);
+    }
+
+    .page-header .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 12px;
+      border-radius: 20px;
+      background: rgba(14, 165, 233, 0.12);
+      border: 1px solid rgba(14, 165, 233, 0.3);
+      color: var(--neon-blue);
+      font-size: 0.72rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      font-weight: 600;
+      margin-bottom: 16px;
+    }
+
+    .page-header h1 {
+      font-size: 2.2rem;
+      font-weight: 700;
+      background: linear-gradient(135deg, #e2e8f0 0%, var(--neon-blue) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      line-height: 1.2;
+      margin-bottom: 12px;
+    }
+
+    .page-header p {
+      color: var(--text-muted);
+      max-width: 680px;
+      font-size: 0.95rem;
+    }
+
+    .meta-tags {
+      display: flex;
+      gap: 10px;
+      margin-top: 18px;
+      flex-wrap: wrap;
+    }
+
+    .meta-tag {
+      padding: 3px 10px;
+      border-radius: 4px;
+      font-size: 0.72rem;
+      font-weight: 500;
+      background: rgba(255, 255, 255, 0.06);
+      color: var(--text-muted);
+    }
+
+    /* ── Sections ──────────────────────────────────── */
+    .section {
+      margin-bottom: 64px;
+      scroll-margin-top: 32px;
+    }
+
+    .section-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 24px;
+    }
+
+    .section-number {
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
+      background: rgba(14, 165, 233, 0.15);
+      border: 1px solid rgba(14, 165, 233, 0.3);
+      color: var(--neon-blue);
+      font-size: 0.8rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .section h2 {
+      font-size: 1.35rem;
+      font-weight: 700;
+      color: var(--text);
+    }
+
+    /* ── Glass Cards ───────────────────────────────── */
+    .glass {
+      background: var(--panel-bg);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid var(--panel-border);
+      border-radius: 12px;
+      padding: 24px;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+    }
+
+    /* ── Architecture Diagram ──────────────────────── */
+    .arch-diagram {
+      background: linear-gradient(135deg, rgba(14, 165, 233, 0.04) 0%, rgba(168, 85, 247, 0.04) 100%);
+      border: 1px solid rgba(14, 165, 233, 0.2);
+      border-radius: 12px;
+      padding: 32px;
+      margin-bottom: 24px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .arch-diagram::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse at 20% 50%, rgba(14, 165, 233, 0.06) 0%, transparent 60%),
+        radial-gradient(ellipse at 80% 50%, rgba(168, 85, 247, 0.06) 0%, transparent 60%);
+      pointer-events: none;
+    }
+
+    .arch-grid {
+      display: grid;
+      grid-template-columns: 1fr 80px 1fr;
+      gap: 0;
+      align-items: center;
+      margin-bottom: 24px;
+    }
+
+    .arch-agent {
+      background: rgba(20, 25, 40, 0.8);
+      border: 1px solid var(--panel-border);
+      border-radius: 10px;
+      padding: 16px 20px;
+      text-align: center;
+      transition: border-color 0.3s;
+    }
+
+    .arch-agent:hover {
+      border-color: var(--neon-blue);
+    }
+
+    .arch-agent.native-false {
+      border-color: rgba(245, 158, 11, 0.4);
+    }
+
+    .arch-agent.native-false:hover {
+      border-color: var(--neon-yellow);
+    }
+
+    .arch-agent .agent-label {
+      font-size: 0.65rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 6px;
+    }
+
+    .arch-agent .agent-name {
+      font-size: 1rem;
+      font-weight: 700;
+      margin-bottom: 4px;
+    }
+
+    .arch-agent.native-false .agent-name {
+      color: var(--neon-yellow);
+    }
+
+    .arch-agent.native-true .agent-name {
+      color: var(--neon-blue);
+    }
+
+    .arch-agent .agent-model {
+      font-family: 'Fira Code', monospace;
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      margin-bottom: 8px;
+    }
+
+    .arch-badge {
+      display: inline-block;
+      padding: 2px 8px;
+      border-radius: 4px;
+      font-size: 0.65rem;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+    }
+
+    .badge-bridge {
+      background: rgba(245, 158, 11, 0.15);
+      color: var(--neon-yellow);
+    }
+
+    .badge-native {
+      background: rgba(16, 185, 129, 0.15);
+      color: var(--neon-green);
+    }
+
+    .arch-arrow {
+      text-align: center;
+      color: var(--text-muted);
+      font-size: 1.3rem;
+    }
+
+    .arch-bridge {
+      background: rgba(245, 158, 11, 0.06);
+      border: 1px dashed rgba(245, 158, 11, 0.3);
+      border-radius: 10px;
+      padding: 16px 20px;
+      margin-bottom: 16px;
+    }
+
+    .arch-bridge .bridge-title {
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: var(--neon-yellow);
+      margin-bottom: 10px;
+      letter-spacing: 0.06em;
+    }
+
+    .bridge-streams {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+    }
+
+    .stream-pill {
+      font-family: 'Fira Code', monospace;
+      font-size: 0.7rem;
+      padding: 6px 10px;
+      border-radius: 6px;
+      background: rgba(0, 0, 0, 0.3);
+      color: var(--text-muted);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+    }
+
+    .arch-telemetry {
+      text-align: center;
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      padding-top: 12px;
+      border-top: 1px solid var(--panel-border);
+    }
+
+    .arch-telemetry code {
+      font-family: 'Fira Code', monospace;
+      color: var(--neon-blue);
+      font-size: 0.72rem;
+    }
+
+    /* ── Component Table ───────────────────────────── */
+    .comp-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.85rem;
+    }
+
+    .comp-table th {
+      text-align: left;
+      padding: 10px 16px;
+      font-size: 0.7rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--neon-blue);
+      background: rgba(14, 165, 233, 0.08);
+      border-bottom: 1px solid var(--panel-border);
+    }
+
+    .comp-table td {
+      padding: 12px 16px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+      color: var(--text);
+      vertical-align: top;
+    }
+
+    .comp-table tr:hover td {
+      background: rgba(255, 255, 255, 0.02);
+    }
+
+    .comp-table code {
+      font-family: 'Fira Code', monospace;
+      font-size: 0.78rem;
+      background: rgba(0, 0, 0, 0.3);
+      padding: 2px 6px;
+      border-radius: 4px;
+      color: var(--neon-blue);
+    }
+
+    .comp-table td:last-child {
+      color: var(--text-muted);
+    }
+
+    /* ── Topology Table ────────────────────────────── */
+    .topo-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+
+    .topo-card {
+      background: rgba(0, 0, 0, 0.25);
+      border-radius: 10px;
+      padding: 20px;
+      border: 1px solid var(--panel-border);
+      transition: border-color 0.3s, box-shadow 0.3s;
+    }
+
+    .topo-card:hover {
+      border-color: rgba(14, 165, 233, 0.4);
+      box-shadow: 0 0 20px rgba(14, 165, 233, 0.06);
+    }
+
+    .topo-card .node-label {
+      font-size: 0.65rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 8px;
+    }
+
+    .topo-card .node-name {
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--neon-blue);
+      margin-bottom: 12px;
+    }
+
+    .topo-row {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.82rem;
+      padding: 5px 0;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+    }
+
+    .topo-row:last-child {
+      border-bottom: none;
+    }
+
+    .topo-row .key {
+      color: var(--text-muted);
+    }
+
+    .topo-row .val {
+      font-family: 'Fira Code', monospace;
+      font-size: 0.78rem;
+      color: var(--text);
+    }
+
+    .topo-row .val.false-val {
+      color: var(--neon-yellow);
+    }
+
+    .topo-row .val.true-val {
+      color: var(--neon-green);
+    }
+
+    /* ── ADR Cards ─────────────────────────────────── */
+    .adr-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .adr-card {
+      background: var(--panel-bg);
+      border: 1px solid var(--panel-border);
+      border-radius: 10px;
+      overflow: hidden;
+      transition: border-color 0.3s;
+    }
+
+    .adr-card:hover {
+      border-color: rgba(14, 165, 233, 0.3);
+    }
+
+    .adr-header {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 16px 20px;
+      cursor: pointer;
+      user-select: none;
+    }
+
+    .adr-num {
+      font-family: 'Fira Code', monospace;
+      font-size: 0.72rem;
+      color: var(--neon-blue);
+      background: rgba(14, 165, 233, 0.12);
+      padding: 3px 8px;
+      border-radius: 4px;
+      white-space: nowrap;
+    }
+
+    .adr-title {
+      flex: 1;
+      font-weight: 600;
+      font-size: 0.92rem;
+    }
+
+    .adr-chevron {
+      color: var(--text-muted);
+      transition: transform 0.3s;
+      font-size: 0.8rem;
+    }
+
+    .adr-card.open .adr-chevron {
+      transform: rotate(180deg);
+    }
+
+    .adr-body {
+      display: none;
+      padding: 0 20px 20px;
+      border-top: 1px solid var(--panel-border);
+    }
+
+    .adr-card.open .adr-body {
+      display: block;
+    }
+
+    .adr-section {
+      margin-top: 14px;
+    }
+
+    .adr-section-label {
+      font-size: 0.65rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      font-weight: 600;
+      margin-bottom: 6px;
+    }
+
+    .adr-section p {
+      font-size: 0.875rem;
+      color: var(--text-muted);
+      line-height: 1.6;
+    }
+
+    /* ── Config Reference ──────────────────────────── */
+    .config-group {
+      margin-bottom: 28px;
+    }
+
+    .config-group-title {
+      font-size: 0.75rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--neon-blue);
+      font-weight: 600;
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .config-group-title::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--panel-border);
+    }
+
+    .config-grid {
+      display: grid;
+      gap: 8px;
+    }
+
+    .config-row {
+      display: grid;
+      grid-template-columns: 240px 250px 1fr;
+      gap: 12px;
+      align-items: start;
+      padding: 10px 14px;
+      border-radius: 8px;
+      background: rgba(0, 0, 0, 0.2);
+      font-size: 0.83rem;
+      transition: background 0.2s;
+    }
+
+    .config-row:hover {
+      background: rgba(255, 255, 255, 0.03);
+    }
+
+    .config-key {
+      font-family: 'Fira Code', monospace;
+      font-size: 0.78rem;
+      color: var(--neon-blue);
+    }
+
+    .config-default {
+      font-family: 'Fira Code', monospace;
+      font-size: 0.73rem;
+      color: var(--neon-green);
+    }
+
+    .config-default.secret {
+      color: var(--neon-red);
+    }
+
+    .config-desc {
+      color: var(--text-muted);
+      font-size: 0.82rem;
+    }
+
+    .config-important .config-key {
+      color: var(--neon-yellow);
+    }
+
+    /* ── Alert Boxes ───────────────────────────────── */
+    .alert {
+      display: flex;
+      gap: 12px;
+      padding: 14px 16px;
+      border-radius: 8px;
+      font-size: 0.85rem;
+      margin: 16px 0;
+      line-height: 1.5;
+    }
+
+    .alert-icon {
+      font-size: 1rem;
+      flex-shrink: 0;
+      margin-top: 1px;
+    }
+
+    .alert-note {
+      background: rgba(14, 165, 233, 0.08);
+      border: 1px solid rgba(14, 165, 233, 0.25);
+      color: #7dd3fc;
+    }
+
+    .alert-caution {
+      background: rgba(239, 68, 68, 0.08);
+      border: 1px solid rgba(239, 68, 68, 0.25);
+      color: #fca5a5;
+    }
+
+    .alert-warn {
+      background: rgba(245, 158, 11, 0.08);
+      border: 1px solid rgba(245, 158, 11, 0.25);
+      color: #fcd34d;
+    }
+
+    .alert-tip {
+      background: rgba(16, 185, 129, 0.08);
+      border: 1px solid rgba(16, 185, 129, 0.25);
+      color: #6ee7b7;
+    }
+
+    .alert code {
+      background: rgba(0, 0, 0, 0.3);
+      padding: 1px 5px;
+      border-radius: 3px;
+      font-family: 'Fira Code', monospace;
+      font-size: 0.78em;
+    }
+
+    /* ── Pipeline Phases ───────────────────────────── */
+    .phase-list {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .phase {
+      background: var(--panel-bg);
+      border: 1px solid var(--panel-border);
+      border-radius: 12px;
+      overflow: hidden;
+    }
+
+    .phase-header {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 16px 20px;
+      border-bottom: 1px solid var(--panel-border);
+      background: rgba(0, 0, 0, 0.15);
+    }
+
+    .phase-badge {
+      width: 36px;
+      height: 36px;
+      border-radius: 8px;
+      font-weight: 700;
+      font-size: 0.85rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .phase-a .phase-badge {
+      background: rgba(14, 165, 233, 0.2);
+      color: var(--neon-blue);
+    }
+
+    .phase-b .phase-badge {
+      background: rgba(16, 185, 129, 0.2);
+      color: var(--neon-green);
+    }
+
+    .phase-c .phase-badge {
+      background: rgba(168, 85, 247, 0.2);
+      color: var(--neon-purple);
+    }
+
+    .phase-d .phase-badge {
+      background: rgba(245, 158, 11, 0.2);
+      color: var(--neon-yellow);
+    }
+
+    .phase-e .phase-badge {
+      background: rgba(239, 68, 68, 0.15);
+      color: var(--neon-red);
+    }
+
+    .phase-f .phase-badge {
+      background: linear-gradient(135deg, rgba(14, 165, 233, 0.2), rgba(168, 85, 247, 0.2));
+      color: #c4b5fd;
+    }
+
+    .phase-info {
+      flex: 1;
+    }
+
+    .phase-title {
+      font-weight: 700;
+      font-size: 0.95rem;
+    }
+
+    .phase-goal {
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      margin-top: 2px;
+    }
+
+    .phase-body {
+      padding: 20px;
+    }
+
+    /* ── Code Blocks ───────────────────────────────── */
+    .code-wrap {
+      position: relative;
+      margin: 12px 0;
+      border-radius: 8px;
+      overflow: hidden;
+    }
+
+    .code-label {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 7px 14px;
+      background: rgba(0, 0, 0, 0.5);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    }
+
+    .code-label-text {
+      font-size: 0.68rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      font-family: 'Fira Code', monospace;
+    }
+
+    .copy-btn {
+      background: transparent;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      color: var(--text-muted);
+      font-size: 0.68rem;
+      padding: 3px 10px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-family: inherit;
+      transition: all 0.2s;
+    }
+
+    .copy-btn:hover {
+      background: rgba(255, 255, 255, 0.08);
+      color: var(--text);
+    }
+
+    .copy-btn.copied {
+      color: var(--neon-green);
+      border-color: var(--neon-green);
+    }
+
+    .code-wrap pre {
+      margin: 0 !important;
+      border-radius: 0 !important;
+    }
+
+    .code-wrap pre code {
+      border-radius: 0 !important;
+      font-size: 0.82rem !important;
+    }
+
+    /* ── Expected Output ───────────────────────────── */
+    .expected {
+      background: rgba(16, 185, 129, 0.05);
+      border: 1px solid rgba(16, 185, 129, 0.2);
+      border-radius: 8px;
+      padding: 10px 14px;
+      font-family: 'Fira Code', monospace;
+      font-size: 0.78rem;
+      color: var(--neon-green);
+      white-space: pre;
+      overflow-x: auto;
+      margin: 8px 0 14px;
+    }
+
+    /* ── Troubleshooting Accordion ─────────────────── */
+    .trouble-list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .trouble-item {
+      border: 1px solid var(--panel-border);
+      border-radius: 8px;
+      overflow: hidden;
+      transition: border-color 0.3s;
+    }
+
+    .trouble-item:hover {
+      border-color: rgba(239, 68, 68, 0.3);
+    }
+
+    .trouble-trigger {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 13px 16px;
+      cursor: pointer;
+      font-size: 0.88rem;
+      font-weight: 500;
+      background: rgba(0, 0, 0, 0.15);
+      user-select: none;
+    }
+
+    .trouble-icon {
+      color: var(--neon-red);
+      font-size: 0.9rem;
+    }
+
+    .trouble-trigger .chevron {
+      margin-left: auto;
+      color: var(--text-muted);
+      transition: transform 0.3s;
+      font-size: 0.75rem;
+    }
+
+    .trouble-item.open .chevron {
+      transform: rotate(180deg);
+    }
+
+    .trouble-body {
+      display: none;
+      padding: 14px 16px;
+      border-top: 1px solid var(--panel-border);
+      font-size: 0.85rem;
+    }
+
+    .trouble-item.open .trouble-body {
+      display: block;
+    }
+
+    .trouble-row {
+      display: grid;
+      grid-template-columns: 90px 1fr;
+      gap: 10px;
+      margin-bottom: 8px;
+      align-items: start;
+    }
+
+    .trouble-row-label {
+      font-size: 0.65rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      font-weight: 700;
+      padding-top: 2px;
+    }
+
+    .label-cause {
+      color: var(--neon-yellow);
+    }
+
+    .label-solution {
+      color: var(--neon-green);
+    }
+
+    .trouble-row p {
+      color: var(--text-muted);
+      line-height: 1.5;
+    }
+
+    .trouble-row code {
+      font-family: 'Fira Code', monospace;
+      font-size: 0.78em;
+      background: rgba(0, 0, 0, 0.3);
+      padding: 1px 5px;
+      border-radius: 3px;
+      color: var(--neon-blue);
+    }
+
+    /* ── Inline Code ───────────────────────────────── */
+    p code,
+    li code,
+    td code {
+      font-family: 'Fira Code', monospace;
+      font-size: 0.82em;
+      background: rgba(0, 0, 0, 0.35);
+      padding: 2px 6px;
+      border-radius: 4px;
+      color: var(--neon-blue);
+    }
+
+    /* ── Checklist Intro ───────────────────────────── */
+    .check-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 10px;
+    }
+
+    .check-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 9px 12px;
+      border-radius: 6px;
+      background: rgba(0, 0, 0, 0.2);
+      font-size: 0.82rem;
+      color: var(--text-muted);
+      border: 1px solid transparent;
+    }
+
+    .check-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--text-muted);
+      flex-shrink: 0;
+    }
+
+    /* ── Progress indicator ────────────────────────── */
+    #reading-progress {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 0%;
+      height: 3px;
+      background: linear-gradient(90deg, var(--neon-blue), var(--neon-purple));
+      z-index: 999;
+      transition: width 0.1s;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div id="reading-progress"></div>
+
+  <!-- ── Sidebar ─────────────────────────────── -->
+  <nav id="sidebar">
+    <div class="sidebar-logo">
+      <div class="title">Vitalia Agente Local</div>
+      <div class="subtitle">Manual de Referência</div>
+    </div>
+
+    <div class="sidebar-section-label">Navegação</div>
+    <a class="nav-item active" href="#arch">
+      <span class="nav-icon">🏗️</span> Arquitetura
+    </a>
+    <a class="nav-item" href="#topology">
+      <span class="nav-icon">🖥️</span> Topologia
+    </a>
+    <a class="nav-item" href="#adrs">
+      <span class="nav-icon">📐</span> Decisões (ADRs)
+    </a>
+    <a class="nav-item" href="#config">
+      <span class="nav-icon">⚙️</span> Configuração .env
+    </a>
+    <a class="nav-item" href="#pipeline">
+      <span class="nav-icon">🔬</span> Pipeline E2E
+    </a>
+    <a class="nav-item" href="#troubleshooting">
+      <span class="nav-icon">🩺</span> Troubleshooting
+    </a>
+
+    <div class="sidebar-section-label">Links</div>
+    <a class="nav-item" href="/index.html">
+      <span class="nav-icon">📡</span> Dashboard
+    </a>
+    <a class="nav-item" href="/manual-onboarding.html">
+      <span class="nav-icon">🎓</span> Manual Onboarding
+    </a>
+
+    <div class="sidebar-footer">
+      Atualizado em 30-06-2026<br>
+      <a href="/index.html">← Voltar ao Control Plane</a>
+    </div>
+  </nav>
+
+  <!-- ── Main ───────────────────────────────── -->
+  <main id="main">
+
+    <!-- Page Header -->
+    <div class="page-header">
+      <div class="badge">📘 Referência Técnica</div>
+      <h1>Manual de Referência<br>Técnica</h1>
+      <p>Foco em <em>por que</em> e <em>armadilhas</em>. Decisões de design, ADRs, referência de configuração e pipeline
+        de validação E2E. Para quem já domina Python/asyncio, Docker e Redis.</p>
+      <div class="meta-tags">
+        <span class="meta-tag">AutoGen</span>
+        <span class="meta-tag">Redis Streams</span>
+        <span class="meta-tag">Tool Bridge</span>
+        <span class="meta-tag">pgvector RAG</span>
+        <span class="meta-tag">Cross-WSL</span>
+      </div>
+    </div>
+
+    <!-- ── 1. Arquitetura ────────────────────── -->
+    <section class="section" id="arch">
+      <div class="section-header">
+        <div class="section-number">1</div>
+        <h2>Visão Geral da Arquitetura</h2>
+      </div>
+
+      <div class="arch-diagram">
+        <div class="arch-grid">
+          <div class="arch-agent native-false">
+            <div class="agent-label">Nó 1 / CPU</div>
+            <div class="agent-name">Arquiteto</div>
+            <div class="agent-model">llama3.2:3b</div>
+            <span class="arch-badge badge-bridge">Tool Bridge</span>
+          </div>
+          <div class="arch-arrow">⇄</div>
+          <div class="arch-agent native-true">
+            <div class="agent-label">Nó 2 / GTX 1060</div>
+            <div class="agent-name">Engenheiro</div>
+            <div class="agent-model">qwen2.5-coder:7b</div>
+            <span class="arch-badge badge-native">Native Tool Call</span>
+          </div>
+        </div>
+
+        <div class="arch-bridge">
+          <div class="bridge-title">🔁 Redis Streams — Tool Bridge</div>
+          <div class="bridge-streams">
+            <div class="stream-pill">vitalia:tool_requests:Architect →</div>
+            <div class="stream-pill">← vitalia:tool_results:Architect</div>
+            <div class="stream-pill">vitalia:tool_requests:Engineer →</div>
+            <div class="stream-pill">← vitalia:tool_results:Engineer</div>
+          </div>
+        </div>
+
+        <div class="arch-telemetry">
+          <code>vitalia_events</code> → <code>telemetry_api.py</code> → WebSocket → Dashboard UI
+        </div>
+      </div>
+
+      <div class="glass">
+        <table class="comp-table">
+          <thead>
+            <tr>
+              <th>Componente</th>
+              <th>Arquivo</th>
+              <th>Responsabilidade</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>build_orchestrator()</code></td>
+              <td><code>main.py</code></td>
+              <td>Monta Arquiteto + Engenheiro com clientes corretos conforme <code>.env</code></td>
+            </tr>
+            <tr>
+              <td><code>VitaliaOllamaClient</code></td>
+              <td><code>main.py</code></td>
+              <td>Intercepta JSON cru de tool call, media via Redis Streams</td>
+            </tr>
+            <tr>
+              <td><code>tool_worker()</code></td>
+              <td><code>main.py</code></td>
+              <td><code>asyncio.Task</code> que executa ferramentas via <code>TOOL_REGISTRY</code></td>
+            </tr>
+            <tr>
+              <td><code>run_vitalia()</code></td>
+              <td><code>main.py</code></td>
+              <td>Entry point: cria conexões Redis, lança worker, inicia AutoGen loop</td>
+            </tr>
+            <tr>
+              <td><code>telemetry_api.py</code></td>
+              <td><code>vitalia-core/</code></td>
+              <td>FastAPI: WebSocket bridge para Dashboard, auth JWT, controle Docker</td>
+            </tr>
+            <tr>
+              <td><code>logger.py</code></td>
+              <td><code>vitalia-core/</code></td>
+              <td>EventLogger: publica em <code>vitalia_events</code> + persiste em shards <code>.jsonl</code></td>
+            </tr>
+            <tr>
+              <td><code>tools.py</code></td>
+              <td><code>vitalia-core/</code></td>
+              <td>Ferramentas: <code>web_search</code>, <code>save_code_to_rag</code>, <code>update_sprint_state</code>…
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- ── 2. Topologia ──────────────────────── -->
+    <section class="section" id="topology">
+      <div class="section-header">
+        <div class="section-number">2</div>
+        <h2>Topologia de Hardware</h2>
+      </div>
+
+      <div class="topo-grid">
+        <div class="topo-card">
+          <div class="node-label">Nó 1</div>
+          <div class="node-name">Notebook (CPU / Swap)</div>
+          <div class="topo-row"><span class="key">Modelo</span><span class="val">llama3.2:3b</span></div>
+          <div class="topo-row"><span class="key">TOOL_CALLING_NATIVE</span><span class="val false-val">false</span>
+          </div>
+          <div class="topo-row"><span class="key">Cliente</span><span class="val">VitaliaOllamaClient</span></div>
+          <div class="topo-row"><span class="key">Mecanismo</span><span class="val">Tool Bridge via Redis</span></div>
+        </div>
+        <div class="topo-card">
+          <div class="node-label">Nó 2</div>
+          <div class="node-name">Servidor (GTX 1060 6GB)</div>
+          <div class="topo-row"><span class="key">Modelo</span><span class="val">qwen2.5-coder:7b</span></div>
+          <div class="topo-row"><span class="key">TOOL_CALLING_NATIVE</span><span class="val true-val">true</span></div>
+          <div class="topo-row"><span class="key">Cliente</span><span class="val">OllamaChatCompletionClient</span>
+          </div>
+          <div class="topo-row"><span class="key">Mecanismo</span><span class="val">Tool calling nativo Ollama</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="alert alert-tip" style="margin-top:16px">
+        <span class="alert-icon">💡</span>
+        <div><strong>Upgrade de hardware:</strong> Para usar tool calling nativo no Nó 1 basta setar
+          <code>NO1_TOOL_CALLING_NATIVE=true</code> no <code>.env</code>. Zero código alterado — esse é o invariante
+          arquitetural central desta refatoração.
+        </div>
+      </div>
+    </section>
+
+    <!-- ── 3. ADRs ──────────────────────────── -->
+    <section class="section" id="adrs">
+      <div class="section-header">
+        <div class="section-number">3</div>
+        <h2>Decisões de Design (ADRs)</h2>
+      </div>
+
+      <div class="adr-list">
+
+        <div class="adr-card">
+          <div class="adr-header" onclick="toggleAdr(this)">
+            <span class="adr-num">ADR-01</span>
+            <span class="adr-title">Tool Bridge via Redis Streams (não via callback direto)</span>
+            <span class="adr-chevron">▼</span>
+          </div>
+          <div class="adr-body">
+            <div class="adr-section">
+              <div class="adr-section-label">Problema</div>
+              <p>O AutoGen roteia a resposta do LLM <em>antes</em> que possamos injetar o resultado da ferramenta no
+                mesmo turno.</p>
+            </div>
+            <div class="adr-section">
+              <div class="adr-section-label">Decisão</div>
+              <p>O wrapper <code>VitaliaOllamaClient.create()</code> detecta o JSON, posta em
+                <code>vitalia:tool_requests:&lt;agent&gt;</code>, aguarda com <code>asyncio.Event</code> e retorna
+                <code>FunctionCall</code> ao AutoGen — como se o tool call tivesse sido nativo.
+              </p>
+            </div>
+            <div class="adr-section">
+              <div class="adr-section-label">Trade-off aceito</div>
+              <p>Latência de 1 round-trip Redis (~1ms local) por tool call. Aceitável dado que a inferência já leva
+                segundos.</p>
+            </div>
+            <div class="adr-section">
+              <div class="adr-section-label">Alternativa rejeitada</div>
+              <p>Monkey-patch no AutoGen — frágil a atualizações de versão.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="adr-card">
+          <div class="adr-header" onclick="toggleAdr(this)">
+            <span class="adr-num">ADR-02</span>
+            <span class="adr-title">correlation_id (UUID4) por pedido de ferramenta</span>
+            <span class="adr-chevron">▼</span>
+          </div>
+          <div class="adr-body">
+            <div class="adr-section">
+              <div class="adr-section-label">Problema</div>
+              <p>Múltiplos tool calls em paralelo poderiam cruzar respostas na stream.</p>
+            </div>
+            <div class="adr-section">
+              <div class="adr-section-label">Decisão</div>
+              <p>Cada pedido gera um UUID4. O <code>tool_worker()</code> posta o resultado com o mesmo
+                <code>correlation_id</code>. O wrapper filtra por ele no XREAD.
+              </p>
+            </div>
+            <div class="adr-section">
+              <div class="adr-section-label">Armadilha conhecida</div>
+              <p>Se o worker crashar após o XADD de request mas antes do XADD de result, o wrapper ficará bloqueado até
+                <code>TOOL_BRIDGE_TIMEOUT_SEC</code>. O resultado é uma mensagem de erro descritiva ao LLM — sem crash
+                do sistema.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div class="adr-card">
+          <div class="adr-header" onclick="toggleAdr(this)">
+            <span class="adr-num">ADR-03</span>
+            <span class="adr-title">HeadAndTailChatCompletionContext no Engenheiro</span>
+            <span class="adr-chevron">▼</span>
+          </div>
+          <div class="adr-body">
+            <div class="adr-section">
+              <div class="adr-section-label">Problema</div>
+              <p>O <code>qwen2.5-coder:7b</code> com 6GB de VRAM não aguenta contexto longo.</p>
+            </div>
+            <div class="adr-section">
+              <div class="adr-section-label">Decisão</div>
+              <p>Com <code>head_size=1</code> e <code>tail_size=20</code>, o Engenheiro sempre vê a tarefa inicial
+                (head) e as últimas 20 mensagens (tail).</p>
+            </div>
+            <div class="adr-section">
+              <div class="adr-section-label">Armadilha</div>
+              <p>Se o Engenheiro estiver repetindo respostas, verifique se <code>tail_size=20</code> é suficiente.
+                Aumente para 30 se necessário, mas monitore a VRAM.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="adr-card">
+          <div class="adr-header" onclick="toggleAdr(this)">
+            <span class="adr-num">ADR-04</span>
+            <span class="adr-title">Sem retry automático no Tool Bridge</span>
+            <span class="adr-chevron">▼</span>
+          </div>
+          <div class="adr-body">
+            <div class="adr-section">
+              <div class="adr-section-label">Decisão</div>
+              <p>Timeout → erro descritivo legível pelo LLM, que pode decidir tentar novamente ou reportar o problema.
+              </p>
+            </div>
+            <div class="adr-section">
+              <div class="adr-section-label">Rationale</div>
+              <p>Retry automático mascararia falhas sistêmicas (Redis down, worker crash). O LLM é o agente correto para
+                decidir se deve ou não tentar de novo.</p>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ── 4. Config ─────────────────────────── -->
+    <section class="section" id="config">
+      <div class="section-header">
+        <div class="section-number">4</div>
+        <h2>Referência de Configuração (.env)</h2>
+      </div>
+
+      <div class="config-status-bar" id="config-status-bar">
+        <span class="config-status-dot loading" id="config-status-dot"></span>
+        <span id="config-status-text">Carregando valores do <code>.env</code>…</span>
+      </div>
+
+      <div class="alert alert-caution">
+        <span class="alert-icon">🔴</span>
+        <div><strong>NO1_MODEL e NO2_MODEL são obrigatórias.</strong> Se ausentes, <code>build_orchestrator()</code>
+          passa <code>None</code> para o cliente Ollama e falha silenciosamente na primeira inferência, não na
+          inicialização.</div>
+      </div>
+
+      <div class="glass" style="margin-top:16px">
+
+        <div class="config-group">
+          <div class="config-group-title">Infraestrutura de Containers</div>
+          <div class="config-grid">
+            <div class="config-row" data-key="POSTGRES_DB"><span class="config-key">POSTGRES_DB</span><span
+                class="config-default live-val" id="val-POSTGRES_DB">vitalia_db</span><span class="config-desc">Nome do
+                banco pgvector</span></div>
+            <div class="config-row" data-key="POSTGRES_USER"><span class="config-key">POSTGRES_USER</span><span
+                class="config-default live-val" id="val-POSTGRES_USER">vitalia_admin</span><span
+                class="config-desc">Usuário do banco</span></div>
+            <div class="config-row" data-key="POSTGRES_PASSWORD"><span class="config-key">POSTGRES_PASSWORD</span><span
+                class="config-default secret live-val" id="val-POSTGRES_PASSWORD">⚠ segredo</span><span
+                class="config-desc">Senha do banco — nunca commitar</span></div>
+            <div class="config-row" data-key="POSTGRES_PORT"><span class="config-key">POSTGRES_PORT</span><span
+                class="config-default live-val" id="val-POSTGRES_PORT">5432</span><span class="config-desc">Porta
+                exposta pelo container</span></div>
+            <div class="config-row" data-key="REDIS_PORT"><span class="config-key">REDIS_PORT</span><span
+                class="config-default live-val" id="val-REDIS_PORT">6379</span><span class="config-desc">Porta do
+                Redis</span></div>
+            <div class="config-row" data-key="REDIS_PASSWORD"><span class="config-key">REDIS_PASSWORD</span><span
+                class="config-default secret live-val" id="val-REDIS_PASSWORD">⚠ segredo</span><span
+                class="config-desc">Senha do Redis — nunca commitar</span></div>
+            <div class="config-row" data-key="DASHBOARD_SECRET_KEY"><span
+                class="config-key">DASHBOARD_SECRET_KEY</span><span class="config-default secret live-val"
+                id="val-DASHBOARD_SECRET_KEY">⚠ segredo</span><span class="config-desc">Chave para JWT do
+                Dashboard</span></div>
+          </div>
+        </div>
+
+        <div class="config-group">
+          <div class="config-group-title">Rede Cross-WSL</div>
+          <div class="config-grid">
+            <div class="config-row" data-key="NO1_LOCAL_OLLAMA_URL"><span
+                class="config-key">NO1_LOCAL_OLLAMA_URL</span><span class="config-default live-val"
+                id="val-NO1_LOCAL_OLLAMA_URL">localhost:11434</span><span class="config-desc">URL do Ollama no Nó
+                1</span></div>
+            <div class="config-row" data-key="NO2_SERVER_IP"><span class="config-key">NO2_SERVER_IP</span><span
+                class="config-default live-val" id="val-NO2_SERVER_IP">192.168.0.218</span><span class="config-desc">URL
+                do Ollama no Nó 2 (servidor remoto)</span></div>
+            <div class="config-row" data-key="VITALIA_PUBSUB_ENABLED"><span
+                class="config-key">VITALIA_PUBSUB_ENABLED</span><span class="config-default live-val"
+                id="val-VITALIA_PUBSUB_ENABLED">True</span><span class="config-desc">Habilita Redis PubSub para
+                eventos</span></div>
+            <div class="config-row" data-key="NODE_TYPE"><span class="config-key">NODE_TYPE</span><span
+                class="config-default live-val" id="val-NODE_TYPE">notebook</span><span class="config-desc">Identifica a
+                máquina: <code>notebook</code> ou <code>server</code></span></div>
+          </div>
+        </div>
+
+        <div class="config-group">
+          <div class="config-group-title">⭐ Perfis de Hardware — Crítico</div>
+          <div class="config-grid">
+            <div class="config-row config-important" data-key="NO1_MODEL"><span class="config-key">NO1_MODEL</span><span
+                class="config-default live-val" id="val-NO1_MODEL">llama3.2:3b</span><span class="config-desc">Modelo do
+                Arquiteto (Nó 1)</span></div>
+            <div class="config-row config-important" data-key="NO2_MODEL"><span class="config-key">NO2_MODEL</span><span
+                class="config-default live-val" id="val-NO2_MODEL">qwen2.5-coder:7b</span><span
+                class="config-desc">Modelo do Engenheiro (Nó 2)</span></div>
+            <div class="config-row config-important" data-key="NO1_TOOL_CALLING_NATIVE"><span
+                class="config-key">NO1_TOOL_CALLING_NATIVE</span><span class="config-default live-val"
+                id="val-NO1_TOOL_CALLING_NATIVE">false</span><span class="config-desc"><code>false</code> →
+                VitaliaOllamaClient (Bridge) | <code>true</code> → cliente nativo</span></div>
+            <div class="config-row config-important" data-key="NO2_TOOL_CALLING_NATIVE"><span
+                class="config-key">NO2_TOOL_CALLING_NATIVE</span><span class="config-default live-val"
+                id="val-NO2_TOOL_CALLING_NATIVE">true</span><span class="config-desc"><code>false</code> →
+                VitaliaOllamaClient (Bridge) | <code>true</code> → cliente nativo</span></div>
+            <div class="config-row config-important" data-key="TOOL_BRIDGE_TIMEOUT_SEC"><span
+                class="config-key">TOOL_BRIDGE_TIMEOUT_SEC</span><span class="config-default live-val"
+                id="val-TOOL_BRIDGE_TIMEOUT_SEC">30</span><span class="config-desc">Timeout do Bridge para aguardar o
+                worker responder</span></div>
+          </div>
+        </div>
+
+        <div class="config-group">
+          <div class="config-group-title">APIs Cloud (opcionais)</div>
+          <div class="config-grid">
+            <div class="config-row" data-key="GEMINI_API_KEY"><span class="config-key">GEMINI_API_KEY</span><span
+                class="config-default secret live-val" id="val-GEMINI_API_KEY">vazio</span><span
+                class="config-desc">Google Gemini — deixar vazio se não usar</span></div>
+            <div class="config-row" data-key="ANTHROPIC_API_KEY"><span class="config-key">ANTHROPIC_API_KEY</span><span
+                class="config-default secret live-val" id="val-ANTHROPIC_API_KEY">vazio</span><span
+                class="config-desc">Anthropic Claude</span></div>
+            <div class="config-row" data-key="OPENAI_API_KEY"><span class="config-key">OPENAI_API_KEY</span><span
+                class="config-default secret live-val" id="val-OPENAI_API_KEY">vazio</span><span
+                class="config-desc">OpenAI — sistema funciona 100% local sem isso</span></div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ── 5. Pipeline ───────────────────────── -->
+    <section class="section" id="pipeline">
+      <div class="section-header">
+        <div class="section-number">5</div>
+        <h2>Pipeline E2E — Fases A–F</h2>
+      </div>
+
+      <div class="alert alert-note" style="margin-bottom:20px">
+        <span class="alert-icon">ℹ️</span>
+        <div>Execute as fases em ordem. Cada fase é pré-requisito da próxima. Avise o resultado de cada bloco antes de
+          avançar.</div>
+      </div>
+
+      <div class="phase-list">
+
+        <!-- Fase A -->
+        <div class="phase phase-a">
+          <div class="phase-header">
+            <div class="phase-badge">A</div>
+            <div class="phase-info">
+              <div class="phase-title">Infraestrutura</div>
+              <div class="phase-goal">Confirmar que os 4 containers Docker estão operacionais</div>
+            </div>
+          </div>
+          <div class="phase-body">
+            <div class="code-wrap">
+              <div class="code-label"><span class="code-label-text">bash — A.0 Containers</span><button class="copy-btn"
+                  onclick="copyCode(this)">Copiar</button></div>
+              <pre><code class="language-bash">docker ps --format "table {{.Names}}\t{{.Status}}\t{{.Ports}}"</code></pre>
+            </div>
+            <div class="code-wrap">
+              <div class="code-label"><span class="code-label-text">bash — A.1 Redis</span><button class="copy-btn"
+                  onclick="copyCode(this)">Copiar</button></div>
+              <pre><code class="language-bash">docker exec -it vitalia_redis redis-cli -a vitalia_redis_secure_2026 ping</code></pre>
+            </div>
+            <div class="alert alert-note">
+              <span class="alert-icon">ℹ️</span>
+              <div>O warning <em>"Using a password with '-a'…"</em> é <strong>esperado e inofensivo</strong>. O
+                <code>redis-cli</code> emite sempre que a senha é passada via argumento (fica visível em
+                <code>ps aux</code>). O que confirma o sucesso é o <code>PONG</code> na linha seguinte.
+              </div>
+            </div>
+            <div class="code-wrap">
+              <div class="code-label"><span class="code-label-text">bash — A.2 Banco de Dados</span><button
+                  class="copy-btn" onclick="copyCode(this)">Copiar</button></div>
+              <pre><code class="language-bash">docker exec -it vitalia_db psql -U vitalia_admin -d vitalia_db -c "SELECT 1;"</code></pre>
+            </div>
+          </div>
+        </div>
+
+        <!-- Fase B -->
+        <div class="phase phase-b">
+          <div class="phase-header">
+            <div class="phase-badge">B</div>
+            <div class="phase-info">
+              <div class="phase-title">Conectividade Cross-WSL</div>
+              <div class="phase-goal">Confirmar que Nó 1 alcança o Ollama no Nó 2</div>
+            </div>
+          </div>
+          <div class="phase-body">
+            <div class="code-wrap">
+              <div class="code-label"><span class="code-label-text">bash — B.1 Ollama Nó 1</span><button
+                  class="copy-btn" onclick="copyCode(this)">Copiar</button></div>
+              <pre><code class="language-bash">curl -s http://localhost:11434/api/tags | python3 -m json.tool | grep '"name"' | head -5</code></pre>
+            </div>
+            <div class="code-wrap">
+              <div class="code-label"><span class="code-label-text">bash — B.2 Ollama Nó 2</span><button
+                  class="copy-btn" onclick="copyCode(this)">Copiar</button></div>
+              <pre><code class="language-bash">curl -s http://192.168.0.218:11434/api/tags | python3 -m json.tool | grep '"name"' | head -5</code></pre>
+            </div>
+            <div class="code-wrap">
+              <div class="code-label"><span class="code-label-text">bash — B.3 Latência (< 100ms)</span><button
+                      class="copy-btn" onclick="copyCode(this)">Copiar</button></div>
+              <pre><code class="language-bash">time curl -s http://192.168.0.218:11434/api/tags > /dev/null</code></pre>
+            </div>
+            <div class="alert alert-warn">
+              <span class="alert-icon">⚠️</span>
+              <div>Se B.2 falhar: o Ollama no servidor pode estar escutando só em <code>127.0.0.1</code>. Verifique com
+                <code>ss -tlnp | grep 11434</code> no servidor. Corrija com <code>OLLAMA_HOST=0.0.0.0</code>.
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Fase C -->
+        <div class="phase phase-c">
+          <div class="phase-header">
+            <div class="phase-badge">C</div>
+            <div class="phase-info">
+              <div class="phase-title">Perfil de Hardware</div>
+              <div class="phase-goal">Confirmar que build_orchestrator() lê o .env corretamente</div>
+            </div>
+          </div>
+          <div class="phase-body">
+            <div class="code-wrap">
+              <div class="code-label"><span class="code-label-text">bash — C.1 Variáveis críticas</span><button
+                  class="copy-btn" onclick="copyCode(this)">Copiar</button></div>
+              <pre><code class="language-bash">grep -E "NO1_MODEL|NO2_MODEL|NO1_TOOL_CALLING_NATIVE|NO2_TOOL_CALLING_NATIVE|TOOL_BRIDGE_TIMEOUT_SEC|NO2_SERVER_IP" .env</code></pre>
+            </div>
+            <div class="code-wrap">
+              <div class="code-label"><span class="code-label-text">python — C.2 Validar
+                  build_orchestrator()</span><button class="copy-btn" onclick="copyCode(this)">Copiar</button></div>
+              <pre><code class="language-python">cd vitalia-core && python3 - << 'EOF'
+import os, sys
+from dotenv import load_dotenv
+load_dotenv("../.env")
+sys.path.insert(0, ".")
+from unittest.mock import patch, MagicMock
+with patch("main.build_ollama_client", return_value=MagicMock()):
+    from main import build_orchestrator
+    team, architect, engineer = build_orchestrator()
+    native_no1 = os.getenv("NO1_TOOL_CALLING_NATIVE", "false").lower() == "true"
+    arch_tools = architect._tools if hasattr(architect, "_tools") else []
+    print(f"NO1_MODEL        : {os.getenv('NO1_MODEL')}")
+    print(f"NO2_MODEL        : {os.getenv('NO2_MODEL')}")
+    print(f"Architect tools  : {len(arch_tools)}")
+    print(f"Engineer context : {type(engineer._model_context).__name__}")
+    print("✅ build_orchestrator() OK")
+EOF</code></pre>
+            </div>
+          </div>
+        </div>
+
+        <!-- Fase D -->
+        <div class="phase phase-d">
+          <div class="phase-header">
+            <div class="phase-badge">D</div>
+            <div class="phase-info">
+              <div class="phase-title">Testes Unitários</div>
+              <div class="phase-goal">9 passed — 6 test_main_e2e + 3 test_tools</div>
+            </div>
+          </div>
+          <div class="phase-body">
+            <div class="code-wrap">
+              <div class="code-label"><span class="code-label-text">bash — D pytest</span><button class="copy-btn"
+                  onclick="copyCode(this)">Copiar</button></div>
+              <pre><code class="language-bash">cd /home/andre/projetos/assistidos/agente-local
+.venv/bin/python -m pytest vitalia-core/tests/ -v --tb=short</code></pre>
+            </div>
+            <div class="expected">9 passed in X.XXs</div>
+          </div>
+        </div>
+
+        <!-- Fase E -->
+        <div class="phase phase-e">
+          <div class="phase-header">
+            <div class="phase-badge">E</div>
+            <div class="phase-info">
+              <div class="phase-title">Tool Bridge Isolado</div>
+              <div class="phase-goal">Testar Redis Streams sem precisar do Ollama</div>
+            </div>
+          </div>
+          <div class="phase-body">
+            <div class="code-wrap">
+              <div class="code-label"><span class="code-label-text">python — E Script de Teste</span><button
+                  class="copy-btn" onclick="copyCode(this)">Copiar</button></div>
+              <pre><code class="language-python">cd vitalia-core && ../.venv/bin/python3 - << 'EOF'
+import asyncio, os
+from dotenv import load_dotenv
+load_dotenv("../.env")
+import redis.asyncio as redis_async
+
+REDIS_URL = f"redis://:{os.getenv('REDIS_PASSWORD')}@localhost:{os.getenv('REDIS_PORT', 6379)}/0"
+
+async def test():
+    r = redis_async.Redis.from_url(REDIS_URL)
+    cid = "bench-test-001"
+    req = "vitalia:tool_requests:Architect"
+    res = "vitalia:tool_results:Architect"
+    await r.delete(req, res)
+    await r.xadd(req, {"correlation_id": cid, "tool_name": "web_search",
+        "arguments_json": '{"query":"test"}', "agent_name": "Architect",
+        "timestamp": "2026-06-30T20:00:00"})
+    print(f"✅ XADD {req}")
+    await r.xadd(res, {"correlation_id": cid, "result": "OK", "error": "", "duration_ms": "1"})
+    print(f"✅ XADD {res}")
+    msgs = await r.xread(streams={res: "0"}, count=10, block=1000)
+    found = any(f.get(b"correlation_id", b"").decode() == cid
+                for _, ms in msgs for _, f in ms)
+    print("✅ XREAD OK" if found else "❌ Não encontrado")
+    await r.aclose()
+    print("✅ Tool Bridge Channel: PASS")
+
+asyncio.run(test())
+EOF</code></pre>
+            </div>
+            <div class="expected">✅ XADD vitalia:tool_requests:Architect
+              ✅ XADD vitalia:tool_results:Architect
+              ✅ XREAD OK
+              ✅ Tool Bridge Channel: PASS</div>
+          </div>
+        </div>
+
+        <!-- Fase F -->
+        <div class="phase phase-f">
+          <div class="phase-header">
+            <div class="phase-badge">F</div>
+            <div class="phase-info">
+              <div class="phase-title">Inferência End-to-End</div>
+              <div class="phase-goal">Ciclo real com ambos os nós Ollama — 1 a 5 minutos</div>
+            </div>
+          </div>
+          <div class="phase-body">
+            <div class="alert alert-caution">
+              <span class="alert-icon">🔴</span>
+              <div>Consome VRAM do Nó 2. Execute <strong>somente após A–E passarem</strong>.</div>
+            </div>
+            <div class="code-wrap" style="margin-top:12px">
+              <div class="code-label"><span class="code-label-text">python — F.1 Ciclo de Inferência</span><button
+                  class="copy-btn" onclick="copyCode(this)">Copiar</button></div>
+              <pre><code class="language-python">cd vitalia-core && ../.venv/bin/python3 - << 'EOF'
+import asyncio, sys
+sys.path.insert(0, ".")
+from main import run_vitalia
+
+asyncio.run(run_vitalia("""
+[BENCH TEST 30-06-2026]
+1. Arquiteto: use web_search para buscar 'Python asyncio best practices 2024' e cite 1 resultado.
+2. Engenheiro: escreva uma função Python de 3 linhas com asyncio.gather() e salve no RAG.
+3. Ao concluir, responda com TERMINATE.
+"""))
+EOF</code></pre>
+            </div>
+            <div class="code-wrap">
+              <div class="code-label"><span class="code-label-text">bash — F.3 Verificar Streams</span><button
+                  class="copy-btn" onclick="copyCode(this)">Copiar</button></div>
+              <pre><code class="language-bash">docker exec -it vitalia_redis redis-cli -a vitalia_redis_secure_2026 \
+  XRANGE vitalia:tool_requests:Architect - + COUNT 5
+docker exec -it vitalia_redis redis-cli -a vitalia_redis_secure_2026 \
+  XRANGE vitalia:tool_results:Architect - + COUNT 5</code></pre>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ── 6. Troubleshooting ────────────────── -->
+    <section class="section" id="troubleshooting">
+      <div class="section-header">
+        <div class="section-number">6</div>
+        <h2>Troubleshooting & Diagnóstico</h2>
+      </div>
+
+      <div class="trouble-list">
+
+        <div class="trouble-item">
+          <div class="trouble-trigger" onclick="toggleTrouble(this)">
+            <span class="trouble-icon">🔴</span>
+            <span>NO1_MODEL: None ao rodar a Fase C</span>
+            <span class="chevron">▼</span>
+          </div>
+          <div class="trouble-body">
+            <div class="trouble-row"><span class="trouble-row-label label-cause">Causa</span>
+              <p>A variável <code>NO1_MODEL</code> (ou <code>NO2_MODEL</code>) não está no <code>.env</code>. O
+                <code>os.getenv()</code> retorna <code>None</code> e não falha na inicialização, só na inferência.
+              </p>
+            </div>
+            <div class="trouble-row"><span class="trouble-row-label label-solution">Solução</span>
+              <p>Adicionar ao <code>.env</code>: <code>NO1_MODEL=llama3.2:3b</code> e
+                <code>NO2_MODEL=qwen2.5-coder:7b</code>.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div class="trouble-item">
+          <div class="trouble-trigger" onclick="toggleTrouble(this)">
+            <span class="trouble-icon">🔴</span>
+            <span>Tool call aparece como TextMessage (não ToolCallRequestEvent)</span>
+            <span class="chevron">▼</span>
+          </div>
+          <div class="trouble-body">
+            <div class="trouble-row"><span class="trouble-row-label label-cause">Causa</span>
+              <p>O LLM não gerou o JSON <code>{name, arguments}</code> esperado. Pode ter ignorado o system_message ou
+                não entendido a instrução de formato.</p>
+            </div>
+            <div class="trouble-row"><span class="trouble-row-label label-solution">Solução</span>
+              <p>Verificar nos logs do Redis se <code>vitalia:tool_requests:Architect</code> tem entradas. Se não tiver,
+                o LLM não gerou JSON — o sistema tratou como texto. Reforçar o <code>system_message</code> com exemplo
+                explícito do formato JSON.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="trouble-item">
+          <div class="trouble-trigger" onclick="toggleTrouble(this)">
+            <span class="trouble-icon">🔴</span>
+            <span>Worker timeout — "Tool unavailable: worker timeout after 30s"</span>
+            <span class="chevron">▼</span>
+          </div>
+          <div class="trouble-body">
+            <div class="trouble-row"><span class="trouble-row-label label-cause">Causa</span>
+              <p>O <code>tool_worker()</code> não foi lançado. Isso acontece quando ambos
+                <code>NO1_TOOL_CALLING_NATIVE=true</code> e <code>NO2_TOOL_CALLING_NATIVE=true</code> — o
+                <code>run_vitalia()</code> não lança o worker neste caso.
+              </p>
+            </div>
+            <div class="trouble-row"><span class="trouble-row-label label-solution">Solução</span>
+              <p>Confirmar com <code>grep "TOOL_CALLING_NATIVE" .env</code>. Se ambos são <code>true</code>, o Bridge
+                não é necessário — mas verifique se deveria ser <code>false</code> em algum nó.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="trouble-item">
+          <div class="trouble-trigger" onclick="toggleTrouble(this)">
+            <span class="trouble-icon">🔴</span>
+            <span>VRAM cheia no Nó 2 — inferência trava ou retorna OOM</span>
+            <span class="chevron">▼</span>
+          </div>
+          <div class="trouble-body">
+            <div class="trouble-row"><span class="trouble-row-label label-cause">Causa</span>
+              <p>O <code>qwen2.5-coder:7b</code> ocupa ~5.5GB dos 6GB disponíveis. Outro processo pode estar usando a
+                GPU.</p>
+            </div>
+            <div class="trouble-row"><span class="trouble-row-label label-solution">Solução</span>
+              <p>No servidor: <code>nvidia-smi</code> para identificar processos. Reiniciar o Ollama libera a VRAM:
+                <code>docker restart vitalia_ollama</code>.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div class="trouble-item">
+          <div class="trouble-trigger" onclick="toggleTrouble(this)">
+            <span class="trouble-icon">🔴</span>
+            <span>ConnectionRefusedError ao pingar o Ollama do Nó 2 (Fase B.2)</span>
+            <span class="chevron">▼</span>
+          </div>
+          <div class="trouble-body">
+            <div class="trouble-row"><span class="trouble-row-label label-cause">Causa</span>
+              <p>O Ollama no servidor está escutando só em <code>127.0.0.1</code> (loopback), não na interface de rede.
+              </p>
+            </div>
+            <div class="trouble-row"><span class="trouble-row-label label-solution">Solução</span>
+              <p>No servidor: <code>ss -tlnp | grep 11434</code>. Se retornar <code>127.0.0.1</code>, configurar
+                <code>OLLAMA_HOST=0.0.0.0</code> antes de iniciar o Ollama.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div class="trouble-item">
+          <div class="trouble-trigger" onclick="toggleTrouble(this)">
+            <span class="trouble-icon">🔴</span>
+            <span>Dashboard JWT expirado ou não autentica</span>
+            <span class="chevron">▼</span>
+          </div>
+          <div class="trouble-body">
+            <div class="trouble-row"><span class="trouble-row-label label-cause">Causa</span>
+              <p>Token JWT de 60 minutos expirou, ou o <code>DASHBOARD_SECRET_KEY</code> mudou no <code>.env</code> após
+                o login.</p>
+            </div>
+            <div class="trouble-row"><span class="trouble-row-label label-solution">Solução</span>
+              <p>Logout e re-autenticar. Se persistir, reiniciar a API:
+                <code>uvicorn telemetry_api:app --host 0.0.0.0 --port 8000 --reload</code>
+              </p>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <div style="margin-top:24px">
+        <div class="config-group-title"
+          style="font-size:0.75rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--neon-blue);font-weight:600;margin-bottom:12px;display:flex;align-items:center;gap:8px;">
+          Comandos de diagnóstico rápido
+          <span style="flex:1;height:1px;background:var(--panel-border);display:block"></span>
+        </div>
+        <div class="code-wrap">
+          <div class="code-label"><span class="code-label-text">bash — Inspecionar Redis Streams</span><button
+              class="copy-btn" onclick="copyCode(this)">Copiar</button></div>
+          <pre><code class="language-bash"># Ver todas as streams ativas
+docker exec -it vitalia_redis redis-cli -a vitalia_redis_secure_2026 KEYS "vitalia:*"
+
+# Últimos 50 eventos
+docker exec -it vitalia_redis redis-cli -a vitalia_redis_secure_2026 \
+  XREVRANGE vitalia:events + - COUNT 50
+
+# Reset de streams de teste
+docker exec -it vitalia_redis redis-cli -a vitalia_redis_secure_2026 \
+  DEL vitalia:tool_requests:Architect vitalia:tool_results:Architect</code></pre>
+        </div>
+      </div>
+
+    </section>
+
+  </main>
+
+  <script>
+    // Syntax highlight
+    document.addEventListener('DOMContentLoaded', () => {
+      hljs.highlightAll();
+      loadEnvConfig();
+    });
+
+    // ── Live .env config ──────────────────────────────
+    const SECRET_KEYS = new Set([
+      'POSTGRES_PASSWORD', 'REDIS_PASSWORD', 'DASHBOARD_SECRET_KEY',
+      'GEMINI_API_KEY', 'ANTHROPIC_API_KEY', 'OPENAI_API_KEY',
+    ]);
+
+    async function loadEnvConfig() {
+      const dot = document.getElementById('config-status-dot');
+      const text = document.getElementById('config-status-text');
+
+      try {
+        const res = await fetch('/api/config/public');
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        const data = await res.json();
+        const { public: pub, secrets } = data;
+
+        // Populate public vars
+        Object.entries(pub).forEach(([key, value]) => {
+          const el = document.getElementById(`val-${key}`);
+          if (!el) return;
+          if (value) {
+            el.textContent = value;
+            el.className = 'config-default live-val loaded';
+          } else {
+            el.textContent = 'não definido';
+            el.className = 'config-default live-val empty';
+          }
+        });
+
+        // Populate secret indicators
+        Object.entries(secrets).forEach(([key, status]) => {
+          const el = document.getElementById(`val-${key}`);
+          if (!el) return;
+          if (status === 'configured') {
+            el.textContent = '● configurado';
+            el.className = 'config-default live-val secret-ok';
+          } else {
+            el.textContent = '○ não configurado';
+            el.className = 'config-default live-val secret-missing';
+          }
+        });
+
+        // Status bar — success
+        dot.className = 'config-status-dot live';
+        text.innerHTML = 'Valores carregados ao vivo do <code>.env</code> via <code>/api/config/public</code>';
+
+      } catch (err) {
+        // Status bar — error (API offline — mostra fallback)
+        dot.className = 'config-status-dot error';
+        text.innerHTML = `API offline — exibindo valores padrão de referência. <small style="color:var(--text-muted)">(${err.message})</small>`;
+      }
+    }
+
+    // ADR toggle
+    function toggleAdr(header) {
+      const card = header.parentElement;
+      card.classList.toggle('open');
+    }
+
+    // Trouble toggle
+    function toggleTrouble(trigger) {
+      const item = trigger.parentElement;
+      item.classList.toggle('open');
+    }
+
+    // Copy code
+    function copyCode(btn) {
+      const pre = btn.closest('.code-wrap').querySelector('pre code');
+      navigator.clipboard.writeText(pre.innerText).then(() => {
+        btn.textContent = 'Copiado!';
+        btn.classList.add('copied');
+        setTimeout(() => {
+          btn.textContent = 'Copiar';
+          btn.classList.remove('copied');
+        }, 2000);
+      });
+    }
+
+    // Active nav on scroll
+    const sections = document.querySelectorAll('.section');
+    const navItems = document.querySelectorAll('.nav-item[href^="#"]');
+    const progressBar = document.getElementById('reading-progress');
+
+    window.addEventListener('scroll', () => {
+      // Progress bar
+      const scrolled = window.scrollY;
+      const total = document.body.scrollHeight - window.innerHeight;
+      progressBar.style.width = `${(scrolled / total) * 100}%`;
+
+      // Active nav
+      let current = '';
+      sections.forEach(s => {
+        if (window.scrollY >= s.offsetTop - 80) current = s.id;
+      });
+      navItems.forEach(a => {
+        a.classList.toggle('active', a.getAttribute('href') === `#${current}`);
+      });
+    });
+  </script>
+</body>
+
+</html>

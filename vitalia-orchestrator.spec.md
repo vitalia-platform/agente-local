@@ -1,4 +1,4 @@
-<!-- vitalia-orchestrator.spec.md | Atualizado em: 26-06-2026 12:08:18(GMT-04:00) -->
+<!-- vitalia-orchestrator.spec.md | Atualizado em: 01-07-2026 15:03:07(GMT-04:00) -->
 
 # Especificação de Funcionalidade: Orquestrador AutoGen Vitalia (Topologia Cross-WSL e Redis State)
 
@@ -22,7 +22,7 @@ O que o software deve fazer de forma observável?
 ## 3. Requisitos Não-Funcionais (Restrições)
 Quais as regras de performance, segurança, ou aderência à Constituição do Arquiteto?
 - [ ] **Constituição - Artigo I e III (Test-First):** Todo arquivo em `vitalia-core` deve possuir testes unitários e **Testes End-to-End (E2E)** simulando o fluxo.
-- [ ] **Constituição - Artigo VI e XII (Zero Hardcoding):** As URLs base não devem estar completas no `.env` (ex: `NO2_SERVER_IP=192.168.0.220`, `DB_HOST=localhost`). O código deve montar a URL final.
+- [ ] **Constituição - Artigo VI e XII (Zero Hardcoding):** As URLs base não devem estar completas no `.env` (ex: `NO2_SERVER_IP=192.168.0.218`, `DB_HOST=localhost`). O código deve montar a URL final.
 - [ ] **Constituição - Artigo XIV (Simplicidade / Desacoplamento Limpo):** O código Python residirá estritamente no diretório `vitalia-core/`. Para não quebrar a convenção do ecossistema e ferramentas padrão, a infraestrutura base (`.env`, `docker-compose.yml`) residirá na **raiz do projeto**. Conexões DB usarão `psycopg2.pool.SimpleConnectionPool` (YAGNI).
 - [ ] **Proteção de VRAM Crítica (Head & Tail):** O Agente Engenheiro deve usar `HeadAndTailChatCompletionContext` (Head=1, Tail=M) com um limite estrito de **7000 tokens** medidos via `tiktoken` para proteger os 6GB da GTX 1060, preservando o `system_message` e definições de tools no Head.
 - [ ] **Persistência Redis:** O Redis deve ser configurado no modo híbrido AOF+RDB (`appendfsync everysec`, `aof-use-rdb-preamble yes`) no compose para garantir resiliência do estado da sprint.

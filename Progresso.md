@@ -1,4 +1,4 @@
-<!-- Progresso.md | Atualizado em: 27-06-2026 11:42:03(GMT-04:00) -->
+<!-- Progresso.md | Atualizado em: 01-07-2026 15:03:06(GMT-04:00) -->
 Aqui estão os passos exatos para deixar sua infraestrutura **Vitalia** operacional:
 
 ---
@@ -63,11 +63,11 @@ docker exec -it vitalia_ollama ollama rm llama3.2-vitalia:latest
 ---
 
 ### 3. Validação de Conectividade Cross-WSL
-Como seu `.env` define `NO2_SERVER_IP=192.168.0.220`, certifique-se de que o Nó 1 consegue "pingar" a API do Ollama no Nó 2.
+Como seu `.env` define `NO2_SERVER_IP=192.168.0.218`, certifique-se de que o Nó 1 consegue "pingar" a API do Ollama no Nó 2.
 
 **Teste de Latência de Inferência (Execute no Notebook):**
 ```bash
-curl http://192.168.0.220:11434/api/tags
+curl http://192.168.0.218:11434/api/tags
 ```
 
 ---

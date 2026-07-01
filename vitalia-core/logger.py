@@ -1,9 +1,10 @@
+# logger.py | Atualizado em: 01-07-2026 15:03:06(GMT-04:00)
 import os
 import json
 import redis
 import socket
 import hashlib
-from datetime import datetime
+from datetime import datetime, timezone
 from dotenv import load_dotenv
 
 load_dotenv(os.path.join(os.path.dirname(__file__), '../.env'))
@@ -53,7 +54,7 @@ class EventLogger:
         event_type: 'conversation' | 'telemetry' | 'system_log' | 'reasoning' | 'tool_call'
         """
         event_data = {
-            "timestamp": datetime.utcnow().isoformat() + "Z",
+            "timestamp": datetime.now(timezone.utc).isoformat(),
             "type": event_type,
             "source": source,
             "payload": json.dumps(payload)
