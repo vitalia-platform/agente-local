@@ -1,0 +1,52 @@
+description = "Aciona o Sub-Agent de Compliance para checar as tarefas do plano contra as regras do always-on antes da implementação."
+
+[meta]
+version          = "0.1.0"
+hardware_profile = "local_gpu_lightweight"
+domain_gates     = []
+
+[hooks]
+# O hook.before não é necessário porque o script principal roda direto.
+# Isso garante que ele execute isoladamente de forma determinística.
+before = []
+after  = []
+
+[tools]
+required = ["run_command"]
+optional = []
+
+[context]
+reads  = [
+  "specs/*/tasks.md",
+  ".vitalia/kit/rules/always-on/*.md"
+]
+writes = []
+
+[variables]
+input  = ["args"]
+output = ["compliance_status", "blocked_reasons"]
+
+[transport]
+preferred     = "redis"
+redis_key     = "vitalia:workflow:task-verifier"
+session_shard = false
+
+prompt = """
+## User Input
+
+```text
+{{args}}
+```
+
+---
+
+## Propósito
+
+Você atuará apenas como o Orquestrador dessa fase. Sua única obrigação neste workflow é acionar o script determinístico híbrido que executa a validação das tarefas via Sub-Agente LLM-as-a-judge (qwen2.5-coder).
+
+Execute o seguinte comando no terminal local:
+`python3 {{VITALIA_DIR}}/vitalia_update_payload/verify_tasks.py`
+
+Se o exit code for 1, imprima um ALERTA VERMELHO na tela e informe ao usuário que o `/vitalia-spec-implement` está bloqueado até que o erro seja corrigido.
+Se o exit code for 0, declare a especificação APROVADA e sugira a execução de `/vitalia-spec-implement`.
+"""

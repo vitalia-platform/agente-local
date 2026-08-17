@@ -1,0 +1,57 @@
+
+# Vitalia Spec Kit — contexto de sessão da IA (repo Git separado)
+# Ignorar contexto de sessão da IA (repósitorio aninhado isolado)
+.agents/*
+!.agents/AGENTS.md
+!.agents/skills/
+!.agents/skills/**
+!.agents/rules/
+!.agents/rules/**
+.specify/*
+.vitalia/*
+.DS_Store
+.docs/*
+/logs
+
+# Variáveis de Ambiente e Segredos
+.env
+.env.*
+!.env.example
+
+# Ignorar arquivos Python compilados e de cache
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Segredos e tokens OAuth — nunca versionar
+token.json
+credentials.json
+
+# Ignorar Dependencies, ambientes virtuais, Python e Node
+.venv
+venv
+node_modules/
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+.coverage
+htmlcov/
+
+# IDE
+.idea/
+.vscode/
+*.swp
+
+# Ignorar contexto de sessão da IA (repósitorio aninhado isolado)
+.vitalia/memory/session/
+.vitalia/memory/session/*
+.vitalia/memory/data_storage/
+.vitalia/memory/data_storage/*
+.vitalia/config.yml
+.vitalia/memory/session/
+.vitalia/memory/data_storage/
+

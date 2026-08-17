@@ -1,0 +1,36 @@
+domains:
+  python_packages:
+    description: "Para validar bibliotecas, versões compatíveis e breaking changes no ecosistema Python."
+    authoritative_source: "pypi.org"
+    validation_schema: 
+      type: "object"
+      properties:
+        package_name: { type: "string" }
+        stable_version: { type: "string" }
+        breaking_changes: { type: "boolean" }
+        verified_url: { type: "string", format: "uri" }
+      required: ["package_name", "stable_version", "verified_url"]
+
+  external_apis:
+    description: "Para validar endpoints, schemas de requisição e rate limits de APIs de terceiros."
+    authoritative_source: "Documentação oficial do provedor da API"
+    validation_schema: 
+      type: "object"
+      properties:
+        api_name: { type: "string" }
+        endpoint_url: { type: "string", format: "uri" }
+        auth_type: { type: "string" }
+        rate_limit: { type: "string" }
+      required: ["api_name", "endpoint_url"]
+
+  cloud_services:
+    description: "Para validar limites, preços e SLAs de serviços cloud (AWS, GCP, Azure)."
+    authoritative_source: "Calculadora de preços ou documentação oficial da nuvem"
+    validation_schema: 
+      type: "object"
+      properties:
+        service_name: { type: "string" }
+        pricing_tier: { type: "string" }
+        limitations: { type: "string" }
+        verified_url: { type: "string", format: "uri" }
+      required: ["service_name", "verified_url"]

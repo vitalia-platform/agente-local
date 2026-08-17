@@ -1,0 +1,1 @@
+/home/andre/.vitalia/kit/rules/always-on/hitl-medical.md

@@ -1,0 +1,149 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  height: calc(100vh - 4rem);
+}
+
+.title {
+  margin: 0;
+  font-family: var(--font-mono);
+  font-weight: 700;
+}
+
+.subtitle {
+  margin: 0 0 1rem 0;
+  color: var(--text-secondary);
+}
+
+.layout {
+  display: flex;
+  gap: 2rem;
+  flex-grow: 1;
+  min-height: 0;
+}
+
+.sidebar {
+  width: 300px;
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+}
+
+.sidebar h3 {
+  margin: 0 0 1rem 0;
+  font-family: var(--font-mono);
+  color: var(--text-primary);
+}
+
+.queueList {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.queueList li {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.75rem 1rem;
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  border: 1px solid transparent;
+  transition: all 0.2s;
+}
+
+.queueList li:hover {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.queueList li.activeQueue {
+  background: var(--bg-tertiary);
+  border-color: var(--accent-primary);
+}
+
+.qName {
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: var(--text-primary);
+  word-break: break-all;
+}
+
+.qLength {
+  font-size: 0.75rem;
+  background: var(--accent-primary);
+  color: white;
+  padding: 0.1rem 0.4rem;
+  border-radius: 999px;
+  font-weight: 700;
+}
+
+.mainArea {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.mainHeader {
+  margin-bottom: 1rem;
+}
+
+.mainHeader h3 {
+  margin: 0;
+  font-family: var(--font-mono);
+  color: var(--accent-primary);
+}
+
+.messageList {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  overflow-y: auto;
+  flex-grow: 1;
+  padding-right: 0.5rem;
+}
+
+.messageItem {
+  background: rgba(0, 0, 0, 0.2);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-sm);
+  display: flex;
+  flex-direction: column;
+}
+
+.msgHeader {
+  padding: 0.5rem 1rem;
+  background: rgba(255, 255, 255, 0.05);
+  border-bottom: 1px solid var(--border-subtle);
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+  font-family: var(--font-mono);
+}
+
+.jsonViewer {
+  margin: 0;
+  padding: 1rem;
+  font-size: 0.8rem;
+  color: var(--accent-success);
+  overflow-x: auto;
+  font-family: 'Space Grotesk', monospace;
+}
+
+.placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  color: var(--text-muted);
+  font-style: italic;
+}
+
+.empty {
+  color: var(--text-muted);
+  font-style: italic;
+}
